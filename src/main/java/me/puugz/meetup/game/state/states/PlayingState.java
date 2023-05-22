@@ -1,9 +1,12 @@
 package me.puugz.meetup.game.state.states;
 
+import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.state.GameState;
+import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,30 +18,55 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author puugz
  * @since May 19, 2023
  */
 public class PlayingState implements GameState {
 
-//    @Getter
-//    private final Countdown countdown = new Countdown(
-//            120, "The border will shrink to ", () -> {
-//        UHCMeetup.getInstance().getBorderHandler().shrinkBorder();
-//        PlayerUtil.broadcast(ChatColor.RED + "The border has shrunk to ...");
-//    });
+    private static final int BORDER_SHRINK_TIME = 120;
+
+    @Getter
+    private final Countdown countdown = new Countdown(BORDER_SHRINK_TIME);
 
     private final PlayerHandler playerHandler = UHCMeetup.getInstance().getPlayerHandler();
+    private final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
 
     @Override
     public void enable() {
-        // TODO: Start border shrinking
+        final AtomicInteger newBorderSize = new AtomicInteger(borderHandler.getBorderSize() > 25
+                ? borderHandler.getBorderSize() - 25
+                : borderHandler.getBorderSize() - 15);
+
+        countdown.setDontCancel(true);
+        countdown.setWhat("The border will shrink to " + ChatColor.GOLD + newBorderSize + ChatColor.YELLOW);
+        countdown.setAction(() -> {
+            borderHandler.shrinkBorder(newBorderSize.intValue());
+            PlayerUtil.broadcast(ChatColor.YELLOW + "The border has shrunk to "
+                    + ChatColor.GOLD + newBorderSize
+                    + ChatColor.YELLOW + ".");
+
+            if (newBorderSize.intValue() > 10) {
+                newBorderSize.set(borderHandler.getBorderSize() > 25
+                        ? borderHandler.getBorderSize() - 25
+                        : borderHandler.getBorderSize() - 15);
+                countdown.setWhat("The border will shrink to " + ChatColor.GOLD + newBorderSize + ChatColor.YELLOW);
+                countdown.setSeconds(BORDER_SHRINK_TIME);
+            } else {
+                countdown.cancel();
+            }
+        });
+        countdown.start();
+
         // TODO: Winner check runnable
         UHCMeetup.getInstance().getScenarioHandler().enable();
     }
 
     @Override
     public void disable() {
+        Countdown.cancelIfActive(this.countdown);
         UHCMeetup.getInstance().getScenarioHandler().disable();
     }
 
@@ -52,6 +80,12 @@ public class PlayingState implements GameState {
 
     @EventHandler
     public void handleQuit(PlayerQuitEvent event) {
+        final GamePlayer gamePlayer = playerHandler.find(event.getPlayer().getUniqueId());
+        gamePlayer.state = GamePlayer.State.SPECTATING;
+
+        event.setQuitMessage(ChatColor.GOLD + gamePlayer.getName()
+                + ChatColor.RED + " has left and been disqualified!");
+
         playerHandler.handleWinnerCheck();
     }
 

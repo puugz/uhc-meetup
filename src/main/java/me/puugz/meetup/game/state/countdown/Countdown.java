@@ -1,6 +1,5 @@
 package me.puugz.meetup.game.state.countdown;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import me.puugz.meetup.UHCMeetup;
@@ -14,19 +13,24 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author puugz
  * @since May 08, 2023
  */
-@AllArgsConstructor
+@Setter
 public class Countdown extends BukkitRunnable {
 
     @Getter
-    @Setter
     private int seconds;
     private String what;
+    private boolean dontCancel;
 
     protected Runnable action;
 
-    public Countdown(int seconds, String what) {
+    public Countdown(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public Countdown(int seconds, String what, Runnable action) {
         this.seconds = seconds;
         this.what = what;
+        this.action = action;
     }
 
     public void start() {
@@ -37,7 +41,8 @@ public class Countdown extends BukkitRunnable {
     @Override
     public void run() {
         if (this.seconds == 0) {
-            this.cancel();
+            if (!this.dontCancel)
+                this.cancel();
             this.action.run();
             return;
         }

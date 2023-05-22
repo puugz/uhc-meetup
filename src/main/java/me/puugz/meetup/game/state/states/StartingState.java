@@ -58,7 +58,6 @@ public class StartingState extends PassiveState {
         final Player player = event.getPlayer();
 
         event.setJoinMessage(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " has joined the game.");
-
         this.preparePlayer(player);
     }
 
@@ -78,10 +77,9 @@ public class StartingState extends PassiveState {
 
     private void preparePlayer(Player player) {
         PlayerUtil.clear(player);
-
-        final Location scatterLocation = LocationUtil.getScatterLocation();
-        player.teleport(scatterLocation);
-
+        player.teleport(LocationUtil.getScatterLocation(
+                UHCMeetup.getInstance().getBorderHandler().getBorderSize()
+        ));
         PlayerUtil.sit(player);
         // TODO: Equip player with items
     }

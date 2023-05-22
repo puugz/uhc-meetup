@@ -32,8 +32,8 @@ public class UHCMeetup extends JavaPlugin {
     private ScoreboardsConfig scoreboardsConfig;
 
     private PlayerHandler playerHandler;
-    private StateHandler stateHandler;
     private BorderHandler borderHandler;
+    private StateHandler stateHandler;
     private MapHandler mapHandler;
     private ScenarioHandler scenarioHandler;
 
@@ -45,17 +45,17 @@ public class UHCMeetup extends JavaPlugin {
         this.messagesConfig = this.configFactory.fromFile("messages", MessagesConfig.class);
         this.scoreboardsConfig = this.configFactory.fromFile("scoreboards", ScoreboardsConfig.class);
 
-        new ScoreboardHandler(this, new ScoreboardProvider(), 10L);
-
         this.playerHandler = new PlayerHandler();
-        this.stateHandler = new StateHandler();
         this.borderHandler = new BorderHandler();
+        this.stateHandler = new StateHandler();
         this.mapHandler = new MapHandler();
         this.scenarioHandler = new ScenarioHandler();
 
-        this.getCommand("forcestart").setExecutor(new ForceStartCommand());
+        new ScoreboardHandler(this, new ScoreboardProvider(), 10L);
 
+        this.getCommand("forcestart").setExecutor(new ForceStartCommand());
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+
         this.ready = true;
     }
 }

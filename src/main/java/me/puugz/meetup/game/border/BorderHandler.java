@@ -3,9 +3,10 @@ package me.puugz.meetup.game.border;
 import lombok.Getter;
 import lombok.Setter;
 import me.puugz.meetup.UHCMeetup;
-import org.bukkit.Material;
-import org.bukkit.World;
+import me.puugz.meetup.util.LocationUtil;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,15 +33,25 @@ public class BorderHandler {
                     Material.LONG_GRASS, Material.DOUBLE_PLANT, Material.YELLOW_FLOWER
             );
 
-    public void shrinkBorder() {
+    public void shrinkBorder(int newBorderSize) {
         final World world = UHCMeetup.getInstance()
                 .getMapHandler().getMapWorld();
 
-        final int newBorderSize = borderSize > 25 ? borderSize - 25 : borderSize - 15;
-        this.borderSize = newBorderSize;
+        Bukkit.getOnlinePlayers()
+                .stream()
+                .filter(player -> !this.isInsideBorder(player.getLocation(), newBorderSize))
+                .forEach(player -> {
+                    player.teleport(LocationUtil.getScatterLocation(newBorderSize));
+                    player.sendMessage(ChatColor.RED + "You have been teleported inside the border.");
+                });
 
-        world.getWorldBorder().setSize(newBorderSize * 2);
+        this.borderSize = newBorderSize;
+        world.getWorldBorder().setSize(this.borderSize * 2);
         this.generateBedrockWall(world);
+    }
+
+    private boolean isInsideBorder(Location location, int borderSize) {
+        return Math.abs(location.getX()) <= borderSize && Math.abs(location.getZ()) <= borderSize;
     }
 
     public void generateBedrockWall(World world) {

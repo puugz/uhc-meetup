@@ -41,11 +41,16 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
             element.add("The game will start in:");
             element.add(ChatColor.GOLD + TimeUtil.formatSeconds(seconds));
         } else if (state instanceof PlayingState) {
+            final PlayingState playingState = (PlayingState) state;
             final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
             final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
 
-            // TODO: Display border shrinking time
-            element.add("Border: " + ChatColor.GOLD + borderHandler.getBorderSize());
+            element.add("Border: "
+                    + ChatColor.GOLD + borderHandler.getBorderSize()
+                    + ChatColor.RESET + " ("
+                    + ChatColor.GOLD + playingState.getCountdown().getSeconds()
+                    + ChatColor.RESET + ")"
+            );
             element.add("Players: " + ChatColor.GOLD + playerHandler.alive().size());
             element.add("Ping: " + ChatColor.GOLD + PlayerUtil.getPing(player) + " ms");
             element.add("Kills: " + ChatColor.GOLD + gamePlayer.kills);

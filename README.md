@@ -7,5 +7,5 @@
 - [ ] Database
 - [ ] Leaderboards
 - [ ] Lobby spawn
-- [ ] Border shrinking
+- [x] Border shrinking
 - [ ] 1.7 border glass

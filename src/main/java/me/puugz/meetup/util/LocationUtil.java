@@ -18,9 +18,7 @@ public class LocationUtil {
 
     private static final Random RANDOM = new Random(System.currentTimeMillis());
 
-    public Location getScatterLocation() {
-        final int borderSize = UHCMeetup.getInstance()
-                .getBorderHandler().getBorderSize();
+    public Location getScatterLocation(int borderSize) {
         final World world = UHCMeetup.getInstance()
                 .getMapHandler().getMapWorld();
 
@@ -33,7 +31,7 @@ public class LocationUtil {
         do {
             x = RANDOM.nextInt(borderSize * 2) - borderSize;
             z = RANDOM.nextInt(borderSize * 2) - borderSize;
-            y = world.getHighestBlockYAt(x, z) + 1;
+            y = world.getHighestBlockYAt(x, z);
         } while (y < 63 || world.getBlockAt(x, y, z).getRelative(BlockFace.DOWN).isLiquid());
 
         return new Location(world, x, y, z);
