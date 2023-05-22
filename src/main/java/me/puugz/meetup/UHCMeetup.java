@@ -8,6 +8,7 @@ import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.map.MapHandler;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.player.listener.PlayerListener;
+import me.puugz.meetup.game.scenario.ScenarioHandler;
 import me.puugz.meetup.game.scoreboard.ScoreboardProvider;
 import me.puugz.meetup.game.state.StateHandler;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +34,7 @@ public class UHCMeetup extends JavaPlugin {
     private StateHandler stateHandler;
     private BorderHandler borderHandler;
     private MapHandler mapHandler;
+    private ScenarioHandler scenarioHandler;
 
     @Override
     public void onEnable() {
@@ -48,7 +50,7 @@ public class UHCMeetup extends JavaPlugin {
         this.stateHandler = new StateHandler();
         this.borderHandler = new BorderHandler();
         this.mapHandler = new MapHandler();
-        this.mapHandler.generateMap();
+        this.scenarioHandler = new ScenarioHandler();
 
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.ready = true;

@@ -1,15 +1,12 @@
 package me.puugz.meetup.game.state.states;
 
-import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.state.GameState;
-import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_8_R3.block.CraftBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -19,6 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 /**
  * @author puugz
@@ -39,12 +37,12 @@ public class PlayingState implements GameState {
     public void enable() {
         // TODO: Start border shrinking
         // TODO: Winner check runnable
-        // TODO: Enable scenarios
+        UHCMeetup.getInstance().getScenarioHandler().enable();
     }
 
     @Override
     public void disable() {
-        // TODO: Disable scenarios
+        UHCMeetup.getInstance().getScenarioHandler().disable();
     }
 
     @EventHandler
@@ -60,10 +58,6 @@ public class PlayingState implements GameState {
         playerHandler.handleWinnerCheck();
     }
 
-    /**
-     * TODO: TimeBomb Scenario
-     * TODO: NoClean Scenario
-     */
     @EventHandler
     public void handleDeath(PlayerDeathEvent event) {
         final Player victim = event.getEntity();
@@ -100,6 +94,14 @@ public class PlayingState implements GameState {
             playerHandler.addSpectator(victim);
             playerHandler.handleWinnerCheck();
         }, 10L);
+    }
+
+    @EventHandler
+    public void handleRespawn(PlayerRespawnEvent event) {
+        final GamePlayer gamePlayer = playerHandler.find(event.getPlayer().getUniqueId());
+
+        if (gamePlayer.deathLocation != null)
+            event.setRespawnLocation(gamePlayer.deathLocation);
     }
 
     /**
