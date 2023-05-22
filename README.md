@@ -1,7 +1,7 @@
 # UHC Meetup
 
 ### TODO:
-- [ ] Scenarios
+- [x] Scenarios
 - [ ] Scenario voting
 - [ ] Kits / Load-outs
 - [ ] Database
