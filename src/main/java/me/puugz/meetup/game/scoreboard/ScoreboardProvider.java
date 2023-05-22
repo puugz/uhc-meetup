@@ -53,7 +53,7 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
             final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
 
             element.add("Kills: " + ChatColor.GOLD + gamePlayer.kills);
-            element.add("Winner: " + ChatColor.GOLD + "N/A");
+            element.add("Winner: " + ChatColor.GOLD + playerHandler.getWinnerName());
         }
 
         element.add(ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "--------------------");
