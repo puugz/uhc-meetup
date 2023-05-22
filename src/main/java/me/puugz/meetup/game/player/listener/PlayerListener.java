@@ -87,7 +87,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handleClick(InventoryClickEvent event) {
-        if (event.getCurrentItem() == null)
+        if (event.getCurrentItem() == null
+                || event.getCurrentItem().getType() == Material.AIR)
             return;
 
         final GamePlayer gamePlayer = plugin
