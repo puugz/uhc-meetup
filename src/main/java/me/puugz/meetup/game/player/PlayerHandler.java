@@ -71,12 +71,17 @@ public class PlayerHandler {
         player.updateInventory();
     }
 
+    /**
+     * Called only from {@link me.puugz.meetup.game.state.states.PlayingState}
+     */
     public void handleWinnerCheck() {
         final List<GamePlayer> alive = this.alive();
 
         if (alive.size() == 1) {
             final GamePlayer winner = alive.get(0);
             this.winnerName = winner.getName();
+
+            UHCMeetup.getInstance().getStateHandler().next();
         }
     }
 
