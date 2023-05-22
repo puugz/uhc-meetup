@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -39,9 +38,9 @@ public class NavigationMenu extends Menu {
         if (target != null) {
             event.getWhoClicked().teleport(target);
             event.getWhoClicked().sendMessage(
-                    ChatColor.GRAY + "You have teleported to "
+                    ChatColor.YELLOW + "You have teleported to "
                             + ChatColor.GOLD + target.getName()
-                            + ChatColor.GRAY + "."
+                            + ChatColor.YELLOW + "."
             );
         }
     }
