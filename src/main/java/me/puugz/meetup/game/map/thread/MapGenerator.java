@@ -46,10 +46,10 @@ public class MapGenerator extends BukkitRunnable {
 
         final World world = worldCreator.createWorld();
 
-        int startX = -borderHandler.getBorderSize();
-        int endX = borderHandler.getBorderSize();
-        int startZ = -borderHandler.getBorderSize();
-        int endZ = borderHandler.getBorderSize();
+        final int startX = -borderHandler.getBorderSize();
+        final int endX = borderHandler.getBorderSize();
+        final int startZ = -borderHandler.getBorderSize();
+        final int endZ = borderHandler.getBorderSize();
 
         // Load chunks inside the border region
         for (int x = startX; x <= endX; x += 16) {
