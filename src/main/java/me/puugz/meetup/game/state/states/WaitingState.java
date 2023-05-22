@@ -1,10 +1,8 @@
 package me.puugz.meetup.game.state.states;
 
-import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.PassiveState;
-import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,12 +28,12 @@ public class WaitingState extends PassiveState {
                 .getPlayerHandler().alive().size();
 
         PlayerUtil.clear(player);
-        event.setJoinMessage(ChatColor.GOLD + player.getName() + ChatColor.GRAY + " has joined the game.");
+        event.setJoinMessage(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " has joined the game.");
 
         if (numOfWaiting >= 2) {
             UHCMeetup.getInstance().getStateHandler().next();
         } else {
-            player.sendMessage(ChatColor.GRAY + "Minimum of 2 players is required for the game to start.");
+            player.sendMessage(ChatColor.YELLOW + "Minimum of 2 players is required for the game to start.");
         }
     }
 
