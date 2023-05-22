@@ -63,7 +63,16 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void handleChat(AsyncPlayerChatEvent event) {
-        // TODO: Spectator only chat
+        final Player player = event.getPlayer();
+        final GamePlayer gamePlayer = plugin
+                .getPlayerHandler().find(player.getUniqueId());
+
+        if (gamePlayer.state == GamePlayer.State.SPECTATING) {
+            event.setFormat(ChatColor.GRAY + "[Spectator] " + event.getFormat());
+            event.getRecipients().removeIf(recipient -> plugin.getPlayerHandler()
+                    .find(recipient.getUniqueId())
+                    .state == GamePlayer.State.PLAYING);
+        }
     }
 
     @EventHandler
