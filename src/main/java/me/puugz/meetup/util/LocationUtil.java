@@ -33,7 +33,7 @@ public class LocationUtil {
         do {
             x = RANDOM.nextInt(borderSize * 2) - borderSize;
             z = RANDOM.nextInt(borderSize * 2) - borderSize;
-            y = world.getHighestBlockYAt(x, z);
+            y = world.getHighestBlockYAt(x, z) + 1;
         } while (y < 63 || world.getBlockAt(x, y, z).getRelative(BlockFace.DOWN).isLiquid());
 
         return new Location(world, x, y, z);
