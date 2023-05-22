@@ -13,11 +13,15 @@ import java.io.IOException;
  */
 public class MapHandler {
 
+    public MapHandler() {
+        this.generateMap();
+    }
+
     /**
      * Generates a clean world with only these biomes:
      * Plains, Desert, Savanna
      */
-    public void generateMap() {
+    private void generateMap() {
         try {
             new MapGenerator().runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
         } catch (IOException e) {

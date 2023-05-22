@@ -15,7 +15,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * @author puugz
@@ -24,7 +23,7 @@ import java.util.Arrays;
 public class MapGenerator extends BukkitRunnable {
 
     private boolean isGenerating;
-    private long startTime = System.currentTimeMillis();
+    private final long startTime = System.currentTimeMillis();
 
     public MapGenerator() throws IOException {
         FileUtils.deleteDirectory(new File("uhc_meetup"));
