@@ -138,6 +138,12 @@ public class PlayingState implements GameState {
         event.setCancelled(this.isSpectating(player));
     }
 
+    @EventHandler
+    public void handleItemPickup(PlayerPickupItemEvent event) {
+        final Player player = event.getPlayer();
+        event.setCancelled(this.isSpectating(player));
+    }
+
     private boolean isSpectating(Player player) {
         final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
         return gamePlayer.state == GamePlayer.State.SPECTATING;
