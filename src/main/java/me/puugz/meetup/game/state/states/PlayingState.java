@@ -13,10 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 
 /**
  * @author puugz
@@ -131,6 +128,12 @@ public class PlayingState implements GameState {
 
     @EventHandler
     public void handleBlockBreak(BlockBreakEvent event) {
+        final Player player = event.getPlayer();
+        event.setCancelled(this.isSpectating(player));
+    }
+
+    @EventHandler
+    public void handleItemDrop(PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
         event.setCancelled(this.isSpectating(player));
     }
