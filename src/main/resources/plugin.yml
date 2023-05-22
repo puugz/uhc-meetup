@@ -3,3 +3,9 @@ version: 1.0
 main: me.puugz.meetup.UHCMeetup
 author: puugz
 website: https://github.com/puugz
+
+commands:
+  forcestart:
+    aliases: [fs]
+    permission: uhcmeetup.command.forcestart
+    permission-message: No permission.

@@ -2,6 +2,7 @@ package me.puugz.meetup;
 
 import io.github.nosequel.scoreboard.ScoreboardHandler;
 import lombok.Getter;
+import me.puugz.meetup.command.ForceStartCommand;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.config.ScoreboardsConfig;
 import me.puugz.meetup.game.border.BorderHandler;
@@ -51,6 +52,8 @@ public class UHCMeetup extends JavaPlugin {
         this.borderHandler = new BorderHandler();
         this.mapHandler = new MapHandler();
         this.scenarioHandler = new ScenarioHandler();
+
+        this.getCommand("forcestart").setExecutor(new ForceStartCommand());
 
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.ready = true;
