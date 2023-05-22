@@ -2,6 +2,7 @@ package me.puugz.meetup.game.state.countdown;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.util.PlayerUtil;
 import me.puugz.meetup.util.TimeUtil;
@@ -17,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Countdown extends BukkitRunnable {
 
     @Getter
+    @Setter
     private int seconds;
     private String what;
 
