@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -100,5 +101,13 @@ public class PlayerListener implements Listener {
             event.setCancelled(true);
             ((Menu) holder).handleClick(event);
         }
+    }
+
+    /**
+     * Not player related but idc
+     */
+    @EventHandler
+    public void handleCreatureSpawn(CreatureSpawnEvent event) {
+        event.setCancelled(true);
     }
 }
