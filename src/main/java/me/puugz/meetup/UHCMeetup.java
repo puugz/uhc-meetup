@@ -2,6 +2,8 @@ package me.puugz.meetup;
 
 import io.github.nosequel.scoreboard.ScoreboardHandler;
 import lombok.Getter;
+import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.config.ScoreboardsConfig;
 import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.map.MapHandler;
 import me.puugz.meetup.game.player.PlayerHandler;
@@ -9,6 +11,7 @@ import me.puugz.meetup.game.player.listener.PlayerListener;
 import me.puugz.meetup.game.scoreboard.ScoreboardProvider;
 import me.puugz.meetup.game.state.StateHandler;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.mkotb.configapi.ConfigFactory;
 
 /**
  * @author puugz
@@ -22,6 +25,10 @@ public class UHCMeetup extends JavaPlugin {
 
     private boolean ready;
 
+    private ConfigFactory configFactory;
+    private MessagesConfig messagesConfig;
+    private ScoreboardsConfig scoreboardsConfig;
+
     private PlayerHandler playerHandler;
     private StateHandler stateHandler;
     private BorderHandler borderHandler;
@@ -31,8 +38,9 @@ public class UHCMeetup extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        this.getConfig().options().copyDefaults(true);
-        this.saveDefaultConfig();
+        this.configFactory = ConfigFactory.newFactory(this);
+        this.messagesConfig = this.configFactory.fromFile("messages", MessagesConfig.class);
+        this.scoreboardsConfig = this.configFactory.fromFile("scoreboards", ScoreboardsConfig.class);
 
         new ScoreboardHandler(this, new ScoreboardProvider(), 10L);
 

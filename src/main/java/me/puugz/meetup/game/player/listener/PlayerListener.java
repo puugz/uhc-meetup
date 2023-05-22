@@ -4,6 +4,7 @@ import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.menu.Menu;
 import me.puugz.meetup.menu.menus.NavigationMenu;
+import me.puugz.meetup.util.Color;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -30,7 +31,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void handlePreLogin(AsyncPlayerPreLoginEvent event) {
         if (!plugin.isReady()) {
-            event.setKickMessage(ChatColor.RED + "The server is currently booting up. Please try again in a bit.");
+            event.setKickMessage(Color.translate(plugin.getMessagesConfig().notReady));
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
             return;
         }
@@ -62,7 +63,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void handleChat(AsyncPlayerChatEvent event) {
-
+        // TODO: Spectator only chat
     }
 
     @EventHandler
