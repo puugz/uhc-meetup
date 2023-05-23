@@ -1,7 +1,6 @@
 package me.puugz.meetup.menu;
 
 import lombok.RequiredArgsConstructor;
-import me.puugz.meetup.util.Color;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

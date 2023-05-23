@@ -6,7 +6,6 @@ import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.util.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
