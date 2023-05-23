@@ -8,4 +8,3 @@ commands:
   forcestart:
     aliases: [fs]
     permission: uhcmeetup.command.forcestart
-    permission-message: No permission.
