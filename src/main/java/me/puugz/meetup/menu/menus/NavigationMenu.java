@@ -1,6 +1,7 @@
 package me.puugz.meetup.menu.menus;
 
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.menu.Menu;
 import org.bukkit.Bukkit;
@@ -20,8 +21,16 @@ import java.util.Collections;
  */
 public class NavigationMenu extends Menu {
 
+    private final MessagesConfig messages = UHCMeetup.getInstance()
+            .getMessagesConfig();
+
     public NavigationMenu() {
-        super(ChatColor.YELLOW + "Navigation", 27);
+        super(27);
+    }
+
+    @Override
+    public String getTitle() {
+        return messages.navigationMenuTitle;
     }
 
     @Override
@@ -37,11 +46,8 @@ public class NavigationMenu extends Menu {
 
         if (target != null) {
             event.getWhoClicked().teleport(target);
-            event.getWhoClicked().sendMessage(
-                    ChatColor.YELLOW + "You have teleported to "
-                            + ChatColor.GOLD + target.getName()
-                            + ChatColor.YELLOW + "."
-            );
+            event.getWhoClicked().sendMessage(messages.teleportedTo
+                    .replace("{player}", target.getName()));
         }
     }
 
@@ -53,7 +59,7 @@ public class NavigationMenu extends Menu {
 
             meta.setOwner(gamePlayer.getName());
             meta.setDisplayName(ChatColor.GOLD + gamePlayer.getName());
-            meta.setLore(Collections.singletonList(ChatColor.GREEN + "Click to teleport."));
+            meta.setLore(Collections.singletonList(messages.clickToTeleport));
             head.setItemMeta(meta);
 
             this.inventory.addItem(head);

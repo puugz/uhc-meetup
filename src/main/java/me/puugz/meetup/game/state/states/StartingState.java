@@ -2,6 +2,7 @@ package me.puugz.meetup.game.state.states;
 
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.PassiveState;
 import me.puugz.meetup.game.state.countdown.Countdown;
@@ -20,11 +21,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class StartingState extends PassiveState {
 
-    // FIXME: remove "/ 6"
+    private final MessagesConfig messages = UHCMeetup.getInstance()
+            .getMessagesConfig();
+
     @Getter
     private final Countdown countdown = new Countdown(
-            60 / /*6*/2, "The game will begin", () -> {
-        PlayerUtil.broadcast(ChatColor.YELLOW + "The game has started!");
+            60, messages.gameStarting, () -> {
+        PlayerUtil.broadcast(messages.gameStarted);
         UHCMeetup.getInstance().getStateHandler().next();
     });
 
@@ -56,7 +59,8 @@ public class StartingState extends PassiveState {
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
-        event.setJoinMessage(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " has joined the game.");
+        event.setJoinMessage(messages.playerJoined
+                .replace("{player}", player.getName()));
         this.preparePlayer(player);
     }
 
@@ -66,10 +70,11 @@ public class StartingState extends PassiveState {
         final int numOfWaiting = UHCMeetup.getInstance()
                 .getPlayerHandler().alive().size();
 
-        event.setQuitMessage(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " has left the game.");
+        event.setQuitMessage(messages.playerQuit
+                .replace("{player}", player.getName()));
 
         if (numOfWaiting < 2 && Countdown.isActive(this.countdown)) {
-            Bukkit.broadcastMessage(ChatColor.RED + "The game has been cancelled due to a player leaving.");
+            Bukkit.broadcastMessage(messages.startingCancelled);
             UHCMeetup.getInstance().getStateHandler().setState(GameState.WAITING);
         }
     }

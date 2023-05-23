@@ -2,6 +2,7 @@ package me.puugz.meetup.game.state.states;
 
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.PassiveState;
 import me.puugz.meetup.game.state.countdown.Countdown;
@@ -15,21 +16,21 @@ import org.bukkit.ChatColor;
  */
 public class EndingState extends PassiveState {
 
+    private final MessagesConfig messages = UHCMeetup.getInstance()
+            .getMessagesConfig();
+
     @Getter
     private final Countdown countdown = new Countdown(
-            60, "The server will be restarting", () -> {
-        PlayerUtil.broadcast(ChatColor.RED + "Server restarting...");
+            60, messages.serverRestarting, () -> {
+        PlayerUtil.broadcast(messages.serverRestart);
         Bukkit.shutdown();
     });
 
     @Override
     public void enable() {
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(
-                ChatColor.GOLD
-                        + UHCMeetup.getInstance().getPlayerHandler().getWinnerName()
-                        + ChatColor.GREEN + " wins!"
-        );
+        Bukkit.broadcastMessage(messages.win
+                .replace("{winner}", UHCMeetup.getInstance().getPlayerHandler().getWinnerName()));
         Bukkit.broadcastMessage("");
 
         // TODO: Save data to database

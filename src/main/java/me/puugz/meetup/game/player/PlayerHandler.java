@@ -2,6 +2,7 @@ package me.puugz.meetup.game.player;
 
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -24,6 +25,9 @@ public class PlayerHandler {
     @Getter
     private final Map<UUID, GamePlayer> players = new HashMap<>();
 
+    private final MessagesConfig messages = UHCMeetup.getInstance()
+            .getMessagesConfig();
+
     @Getter
     private String winnerName;
 
@@ -33,7 +37,7 @@ public class PlayerHandler {
         this.compass = new ItemStack(Material.COMPASS);
 
         final ItemMeta meta = compass.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + "Navigator");
+        meta.setDisplayName(messages.navigationItem);
         compass.setItemMeta(meta);
     }
 
@@ -61,7 +65,7 @@ public class PlayerHandler {
 
         // TODO: Add Ghost Invisibility Effect
 
-        player.sendMessage(ChatColor.YELLOW + "You are now a spectator of this game.");
+        player.sendMessage(messages.nowSpectating);
         player.getActivePotionEffects().clear();
         player.setGameMode(GameMode.CREATIVE);
         player.setFlying(true);

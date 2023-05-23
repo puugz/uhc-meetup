@@ -3,6 +3,7 @@ package me.puugz.meetup.game.border;
 import lombok.Getter;
 import lombok.Setter;
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.util.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -35,13 +36,15 @@ public class BorderHandler {
     public void shrinkBorder(int newBorderSize) {
         final World world = UHCMeetup.getInstance()
                 .getMapHandler().getMapWorld();
+        final MessagesConfig messages = UHCMeetup.getInstance()
+                .getMessagesConfig();
 
         Bukkit.getOnlinePlayers()
                 .stream()
                 .filter(player -> !this.isInsideBorder(player.getLocation(), newBorderSize))
                 .forEach(player -> {
                     player.teleport(LocationUtil.getScatterLocation(newBorderSize));
-                    player.sendMessage(ChatColor.RED + "You have been teleported inside the border.");
+                    player.sendMessage(messages.teleportInsideBorder);
                 });
 
         this.borderSize = newBorderSize;

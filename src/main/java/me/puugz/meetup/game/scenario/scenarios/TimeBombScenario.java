@@ -65,7 +65,8 @@ public class TimeBombScenario extends Scenario {
             chest.update();
 
             location.getWorld().createExplosion(location, 3.0F);
-            Bukkit.broadcastMessage(ChatColor.GOLD + victimName + ChatColor.YELLOW + "'s corpse has exploded!");
+            Bukkit.broadcastMessage(UHCMeetup.getInstance().getMessagesConfig()
+                    .timeBombExplosion.replace("{player}", victimName));
         }, 20L * 30L);
     }
 }

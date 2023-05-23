@@ -69,7 +69,8 @@ public class PlayerListener implements Listener {
                 .getPlayerHandler().find(player.getUniqueId());
 
         if (gamePlayer.state == GamePlayer.State.SPECTATING) {
-            event.setFormat(ChatColor.GRAY + "[Spectator] " + ChatColor.RESET + event.getFormat());
+            event.setFormat(UHCMeetup.getInstance().getMessagesConfig().spectatorPrefix
+                    .replace("{format}", event.getFormat()));
             event.getRecipients().removeIf(recipient -> plugin.getPlayerHandler()
                     .find(recipient.getUniqueId())
                     .state == GamePlayer.State.PLAYING);

@@ -1,6 +1,7 @@
 package me.puugz.meetup.command;
 
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.util.LocationUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,8 +23,11 @@ public class SetSpawnCommand implements CommandExecutor {
             String label,
             String[] args
     ) {
+        final MessagesConfig messages = UHCMeetup.getInstance()
+                .getMessagesConfig();
+
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players may execute this command!");
+            sender.sendMessage(messages.playerOnlyCommand);
             return true;
         }
 
@@ -33,7 +37,7 @@ public class SetSpawnCommand implements CommandExecutor {
         plugin.getConfig().set("spawn-location", LocationUtil.locationToString(spawnLocation));
         plugin.getMapHandler().setSpawnLocation(spawnLocation);
 
-        sender.sendMessage(ChatColor.GREEN + "Spawn location has been set.");
+        sender.sendMessage(messages.spawnSet);
 
         return true;
     }

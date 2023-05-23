@@ -2,12 +2,14 @@ package me.puugz.meetup.game.state.states;
 
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
+import me.puugz.meetup.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,10 +28,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PlayingState implements GameState {
 
+    // TODO: Settings config
     private static final int BORDER_SHRINK_TIME = 120;
 
     @Getter
     private final Countdown countdown = new Countdown(BORDER_SHRINK_TIME);
+
+    private final MessagesConfig messages = UHCMeetup.getInstance()
+            .getMessagesConfig();
 
     private final PlayerHandler playerHandler = UHCMeetup.getInstance().getPlayerHandler();
     private final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
@@ -41,18 +47,17 @@ public class PlayingState implements GameState {
                 : borderHandler.getBorderSize() - 15);
 
         countdown.setDontCancel(true);
-        countdown.setWhat("The border will shrink to " + ChatColor.GOLD + newBorderSize + ChatColor.YELLOW);
+        countdown.setWhat(messages.borderShrink.replace("{size}", newBorderSize.toString()));
         countdown.setAction(() -> {
             borderHandler.shrinkBorder(newBorderSize.intValue());
-            PlayerUtil.broadcast(ChatColor.YELLOW + "The border has shrunk to "
-                    + ChatColor.GOLD + newBorderSize
-                    + ChatColor.YELLOW + ".");
+            PlayerUtil.broadcast(messages.borderShrunk
+                    .replace("{size}", newBorderSize.toString()));
 
             if (newBorderSize.intValue() > 10) {
                 newBorderSize.set(borderHandler.getBorderSize() > 25
                         ? borderHandler.getBorderSize() - 25
                         : borderHandler.getBorderSize() - 15);
-                countdown.setWhat("The border will shrink to " + ChatColor.GOLD + newBorderSize + ChatColor.YELLOW);
+                countdown.setWhat(messages.borderShrink.replace("{size}", newBorderSize.toString()));
                 countdown.setSeconds(BORDER_SHRINK_TIME);
             } else {
                 countdown.cancel();
@@ -83,8 +88,8 @@ public class PlayingState implements GameState {
         final GamePlayer gamePlayer = playerHandler.find(event.getPlayer().getUniqueId());
         gamePlayer.state = GamePlayer.State.SPECTATING;
 
-        event.setQuitMessage(ChatColor.GOLD + gamePlayer.getName()
-                + ChatColor.RED + " has left and been disqualified!");
+        event.setQuitMessage(messages.playerDisqualified
+                .replace("{player}", gamePlayer.getName()));
 
         playerHandler.handleWinnerCheck();
     }
@@ -103,20 +108,14 @@ public class PlayingState implements GameState {
             final GamePlayer killerData = playerHandler.find(killer.getUniqueId());
             killerData.kills++;
 
-            victim.sendMessage(ChatColor.YELLOW + "You have been killed by "
-                    + ChatColor.GOLD + killer.getName()
-                    + ChatColor.YELLOW + ".");
-            killer.sendMessage(ChatColor.YELLOW + "You have killed "
-                    + ChatColor.GOLD + victim.getName()
-                    + ChatColor.YELLOW + ".");
+            victim.sendMessage(messages.killedBy.replace("{killer}", killer.getName()));
+            killer.sendMessage(messages.killedPlayer.replace("{victim}", victim.getName()));
 
-            event.setDeathMessage(ChatColor.GOLD + victim.getName()
-                    + ChatColor.YELLOW + " was slain by "
-                    + ChatColor.GOLD + killer.getName()
-                    + ChatColor.YELLOW + ".");
+            event.setDeathMessage(messages.slainByKiller
+                    .replace("{victim}", victim.getName())
+                    .replace("{killer}", killer.getName()));
         } else {
-            event.setDeathMessage(ChatColor.GOLD + victim.getName()
-                    + ChatColor.YELLOW + " has died.");
+            event.setDeathMessage(messages.died.replace("{player}", victim.getName()));
         }
 
         victim.spigot().respawn();

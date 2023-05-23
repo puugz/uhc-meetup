@@ -1,6 +1,7 @@
 package me.puugz.meetup.game.state.states;
 
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.PassiveState;
 import me.puugz.meetup.util.PlayerUtil;
@@ -15,6 +16,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class WaitingState extends PassiveState {
 
+    private final MessagesConfig messages = UHCMeetup.getInstance()
+            .getMessagesConfig();
+
     @EventHandler
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
@@ -25,12 +29,14 @@ public class WaitingState extends PassiveState {
                 .getMapHandler().getSpawnLocation());
 
         PlayerUtil.clear(player);
-        event.setJoinMessage(ChatColor.GOLD + player.getName() + ChatColor.YELLOW + " has joined the game.");
+        event.setJoinMessage(messages.playerJoined
+                .replace("{player}", player.getName()));
 
         if (numOfWaiting >= 2) {
             UHCMeetup.getInstance().getStateHandler().next();
         } else {
-            player.sendMessage(ChatColor.YELLOW + "Minimum of 2 players is required for the game to start.");
+            player.sendMessage(messages.minimumRequiredPlayers
+                    .replace("{min}", "2"));
         }
     }
 
