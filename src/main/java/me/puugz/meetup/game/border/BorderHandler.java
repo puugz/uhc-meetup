@@ -30,7 +30,10 @@ public class BorderHandler {
             Arrays.asList(
                     Material.WATER, Material.STATIONARY_WATER, Material.LAVA,
                     Material.STATIONARY_LAVA, Material.LEAVES, Material.LEAVES_2,
-                    Material.LONG_GRASS, Material.DOUBLE_PLANT, Material.YELLOW_FLOWER
+                    Material.LONG_GRASS, Material.DOUBLE_PLANT, Material.YELLOW_FLOWER,
+                    Material.SNOW, Material.CACTUS, Material.DEAD_BUSH,
+                    Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.HUGE_MUSHROOM_1,
+                    Material.HUGE_MUSHROOM_2
             );
 
     public void shrinkBorder(int newBorderSize) {
