@@ -18,12 +18,10 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.mkotb:ConfigAPI:e1c8df3f13")
+    implementation("xyz.mkotb:config-api:1.0.1") // my fork in maven local repo
     implementation("com.github.puugz:ScoreboardAPI:f395b4bb0e")
 
     compileOnly("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly("org.bukkit:bukkit:1.8.8-R0.1-SNAPSHOT")
 
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
