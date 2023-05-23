@@ -8,3 +8,5 @@ commands:
   forcestart:
     aliases: [fs]
     permission: uhcmeetup.command.forcestart
+  setspawn:
+    permission: uhcmeetup.command.setspawn
