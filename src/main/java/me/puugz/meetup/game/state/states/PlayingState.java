@@ -9,9 +9,7 @@ import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
-import me.puugz.meetup.util.TimeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -79,6 +77,8 @@ public class PlayingState implements GameState {
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
+        event.setJoinMessage(null);
+
         PlayerUtil.clear(player);
         playerHandler.addSpectator(player);
     }
@@ -86,10 +86,15 @@ public class PlayingState implements GameState {
     @EventHandler
     public void handleQuit(PlayerQuitEvent event) {
         final GamePlayer gamePlayer = playerHandler.find(event.getPlayer().getUniqueId());
-        gamePlayer.state = GamePlayer.State.SPECTATING;
 
-        event.setQuitMessage(messages.playerDisqualified
-                .replace("{player}", gamePlayer.getName()));
+        if (gamePlayer.state == GamePlayer.State.PLAYING) {
+            gamePlayer.state = GamePlayer.State.SPECTATING;
+
+            event.setQuitMessage(messages.playerDisqualified
+                    .replace("{player}", gamePlayer.getName()));
+        } else {
+            event.setQuitMessage(null);
+        }
 
         playerHandler.handleWinnerCheck();
     }
