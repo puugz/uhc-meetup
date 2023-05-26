@@ -3,7 +3,6 @@ package me.puugz.meetup.command;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.util.LocationUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,6 +31,12 @@ public class SetSpawnCommand implements CommandExecutor {
         }
 
         final Location spawnLocation = ((Player) sender).getLocation();
+
+        if (spawnLocation.getWorld().getName().equals("uhc_meetup")) {
+            sender.sendMessage(messages.cantSetSpawnHere);
+            return true;
+        }
+
         final UHCMeetup plugin = UHCMeetup.getInstance();
 
         plugin.getConfig().set("spawn-location", LocationUtil.locationToString(spawnLocation));

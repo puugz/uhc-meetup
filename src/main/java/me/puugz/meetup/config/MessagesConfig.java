@@ -91,7 +91,7 @@ public class MessagesConfig {
     public final String spawnSet = ChatColor.GREEN + "Spawn location has been set.";
 
     @Coloured
-    public final String timeBombExplosion = ChatColor.DARK_BLUE + "{player}" + ChatColor.GRAY + "'s corspe has exploded!";
+    public final String cantSetSpawnHere = ChatColor.RED + "You can't set the spawn in this world.";
 
     @Coloured
     public final String teleportedTo = ChatColor.GRAY + "You have teleported to " + ChatColor.DARK_BLUE + "{player}" + ChatColor.GRAY + ".";
