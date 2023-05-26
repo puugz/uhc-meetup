@@ -8,13 +8,13 @@ import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.state.GameState;
+import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.game.state.states.EndingState;
 import me.puugz.meetup.game.state.states.PlayingState;
 import me.puugz.meetup.game.state.states.StartingState;
 import me.puugz.meetup.game.state.states.WaitingState;
 import me.puugz.meetup.util.PlayerUtil;
 import me.puugz.meetup.util.TimeUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -39,7 +39,7 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
             element.getLines().addAll(config.waiting);
         } else if (state instanceof StartingState) {
             final StartingState startingState = (StartingState) state;
-            final int seconds = startingState.getCountdown().getSeconds();
+            final int seconds = startingState.getCountdown().getSeconds() + 1;
 
             for (String line : config.starting) {
                 element.add(line.replace("{time}", TimeUtil.formatSeconds(seconds)));
@@ -47,12 +47,18 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
         } else if (state instanceof PlayingState) {
             final PlayingState playingState = (PlayingState) state;
             final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
+
             final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
+            final boolean isBorderShrinking = Countdown.isActive(playingState.getCountdown());
+            final String borderFormat = isBorderShrinking
+                    ? config.borderFormat.replace("{border_time}",
+                    "" + (playingState.getCountdown().getSeconds() + 1))
+                    : "";
 
             for (String line : config.playing) {
                 element.add(line
                         .replace("{border_size}", "" + borderHandler.getBorderSize())
-                        .replace("{border_time}", "" + playingState.getCountdown().getSeconds())
+                        .replace("{border_format}", borderFormat)
                         .replace("{players}", "" + playerHandler.alive().size())
                         .replace("{ping}", "" + PlayerUtil.getPing(player))
                         .replace("{kills}", "" + gamePlayer.kills));

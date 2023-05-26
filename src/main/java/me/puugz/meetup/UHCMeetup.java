@@ -59,7 +59,7 @@ public class UHCMeetup extends JavaPlugin {
         this.scenarioHandler = new ScenarioHandler();
         this.kitHandler = new KitHandler();
 
-        new ScoreboardHandler(this, new ScoreboardProvider(), 10L);
+        new ScoreboardHandler(this, new ScoreboardProvider(), 5L);
 
         this.getCommand("forcestart").setExecutor(new ForceStartCommand());
         this.getCommand("setspawn").setExecutor(new SetSpawnCommand());
