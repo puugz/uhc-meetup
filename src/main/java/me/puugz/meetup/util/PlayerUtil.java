@@ -20,10 +20,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 @UtilityClass
 public class PlayerUtil {
 
-    public final String GOLDEN_HEAD_NAME = ChatColor.GOLD + "Golden Head";
-
     public ItemStack GOLDEN_HEAD = new ItemBuilder(Material.GOLDEN_APPLE)
-            .name(GOLDEN_HEAD_NAME)
+            .name(ChatColor.GOLD + "Golden Head")
             .build();
 
     public void clear(Player player) {
