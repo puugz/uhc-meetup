@@ -8,6 +8,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 
 /**
  * @author puugz
@@ -48,6 +49,11 @@ public abstract class PassiveState implements GameState {
 
     @EventHandler
     public void handle(PlayerArmorStandManipulateEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void handle(PlayerItemConsumeEvent event) {
         event.setCancelled(true);
     }
 }
