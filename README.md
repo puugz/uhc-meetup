@@ -3,7 +3,7 @@
 ### TODO:
 - [x] Scenarios
 - [ ] Scenario voting
-- [ ] Kits / Load-outs
+- [x] Kits / Load-outs
 - [ ] Database
 - [ ] Leaderboards
 - [x] Lobby spawn

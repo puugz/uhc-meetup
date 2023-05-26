@@ -7,6 +7,7 @@ import me.puugz.meetup.command.SetSpawnCommand;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.config.ScoreboardsConfig;
 import me.puugz.meetup.game.border.BorderHandler;
+import me.puugz.meetup.game.kit.KitHandler;
 import me.puugz.meetup.game.map.MapHandler;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.player.listener.PlayerListener;
@@ -37,6 +38,7 @@ public class UHCMeetup extends JavaPlugin {
     private StateHandler stateHandler;
     private MapHandler mapHandler;
     private ScenarioHandler scenarioHandler;
+    private KitHandler kitHandler;
 
     @Override
     public void onEnable() {
@@ -55,6 +57,7 @@ public class UHCMeetup extends JavaPlugin {
         this.stateHandler = new StateHandler();
         this.mapHandler = new MapHandler();
         this.scenarioHandler = new ScenarioHandler();
+        this.kitHandler = new KitHandler();
 
         new ScoreboardHandler(this, new ScoreboardProvider(), 10L);
 
