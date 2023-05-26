@@ -19,7 +19,9 @@ public class Countdown extends BukkitRunnable {
     @Getter
     private int seconds;
     private String what;
+
     private boolean dontCancel;
+    private boolean noSound;
 
     protected Runnable action;
 
@@ -48,8 +50,12 @@ public class Countdown extends BukkitRunnable {
         }
 
         switch (this.seconds) {
-            case 300: case 240: case 180: case 120: case 60: case 30: case 15: case 10: case 5: case 4: case 3: case 2: case 1:
-                PlayerUtil.broadcast(this.what.replace("{time}", TimeUtil.formatSeconds(this.seconds)));
+            case 300: case 240: case 180: case 120: case 60: case 30: case 15: case 10: case 5: case 4: case 3: case 2: case 1: {
+                if (this.noSound)
+                    Bukkit.broadcastMessage(this.what.replace("{time}", TimeUtil.formatSeconds(this.seconds)));
+                else
+                    PlayerUtil.broadcast(this.what.replace("{time}", TimeUtil.formatSeconds(this.seconds)));
+            }
         }
 
         this.seconds--;
@@ -61,6 +67,6 @@ public class Countdown extends BukkitRunnable {
     }
 
     public static boolean isActive(Countdown countdown) {
-        return countdown != null && Bukkit.getScheduler().isCurrentlyRunning(countdown.getTaskId());
+        return countdown != null && Bukkit.getScheduler().isQueued(countdown.getTaskId());
     }
 }

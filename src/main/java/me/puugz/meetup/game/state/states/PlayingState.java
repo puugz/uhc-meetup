@@ -17,6 +17,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,10 +48,12 @@ public class PlayingState implements GameState {
                 : borderHandler.getBorderSize() - 15);
 
         countdown.setDontCancel(true);
+        countdown.setNoSound(true);
+
         countdown.setWhat(messages.borderShrink.replace("{size}", newBorderSize.toString()));
         countdown.setAction(() -> {
             borderHandler.shrinkBorder(newBorderSize.intValue());
-            PlayerUtil.broadcast(messages.borderShrunk
+            Bukkit.broadcastMessage(messages.borderShrunk
                     .replace("{size}", newBorderSize.toString()));
 
             if (newBorderSize.intValue() > 10) {
