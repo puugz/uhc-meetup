@@ -139,6 +139,16 @@ public class PlayingState implements GameState {
             event.setRespawnLocation(gamePlayer.deathLocation);
     }
 
+    @EventHandler
+    public void handleGoldenApple(PlayerItemConsumeEvent event) {
+        final ItemStack item = event.getItem();
+
+        if (item.isSimilar(PlayerUtil.GOLDEN_HEAD)) {
+            final Player player = event.getPlayer();
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 1), true);
+        }
+    }
+
     /**
      * Spectator events
      */

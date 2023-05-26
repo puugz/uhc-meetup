@@ -6,13 +6,11 @@ import net.minecraft.server.v1_8_R3.EntityBat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAttachEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 /**
@@ -21,6 +19,12 @@ import org.bukkit.metadata.FixedMetadataValue;
  */
 @UtilityClass
 public class PlayerUtil {
+
+    public final String GOLDEN_HEAD_NAME = ChatColor.GOLD + "Golden Head";
+
+    public ItemStack GOLDEN_HEAD = new ItemBuilder(Material.GOLDEN_APPLE)
+            .name(GOLDEN_HEAD_NAME)
+            .build();
 
     public void clear(Player player) {
         clear(player, true);

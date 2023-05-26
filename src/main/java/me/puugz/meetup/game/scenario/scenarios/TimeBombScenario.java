@@ -2,8 +2,8 @@ package me.puugz.meetup.game.scenario.scenarios;
 
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.game.scenario.Scenario;
+import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -56,7 +56,7 @@ public class TimeBombScenario extends Scenario {
         location.add(1, 1, 0).getBlock().setType(Material.AIR);
 
         chest.getBlockInventory().addItem(items.toArray(new ItemStack[0]));
-        // TODO: Add golden head
+        chest.getBlockInventory().addItem(PlayerUtil.GOLDEN_HEAD);
         chest.update();
 
         Bukkit.getScheduler().runTaskLater(UHCMeetup.getInstance(), () -> {
