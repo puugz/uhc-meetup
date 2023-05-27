@@ -10,6 +10,7 @@ import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -153,6 +154,27 @@ public class PlayingState implements GameState {
             final Player player = event.getPlayer();
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 1), true);
         }
+    }
+
+    @EventHandler
+    public void handleArrowDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        final Player player = (Player) event.getEntity();
+        if (!(event.getDamager() instanceof Arrow)) return;
+
+        final Arrow arrow = (Arrow) event.getDamager();
+        if (!(arrow.getShooter() instanceof Player)) return;
+
+        final Player shooter = (Player) arrow.getShooter();
+        if (player.getUniqueId().equals(shooter.getUniqueId())) return;
+
+        final double health = Math.ceil(player.getHealth() - event.getFinalDamage()) / 2.0D;
+
+        if (health > 0.0D)
+            shooter.sendMessage(this.messages.arrowHit
+                    .replace("{player}", player.getName())
+                    .replace("{health}", "" + health));
     }
 
     /**
