@@ -89,6 +89,9 @@ public class PlayingState implements GameState {
         event.setJoinMessage(null);
 
         PlayerUtil.clear(player);
+        player.teleport(UHCMeetup.getInstance()
+                .getMapHandler().getSpectatorLocation());
+
         this.playerHandler.addSpectator(player);
     }
 

@@ -15,11 +15,13 @@ import java.io.IOException;
  * @author puugz
  * @since May 19, 2023
  */
+@Getter
+@Setter
 public class MapHandler {
 
-    @Getter
-    @Setter
     private Location spawnLocation;
+
+    private Location spectatorLocation;
 
     public MapHandler() {
         this.spawnLocation = LocationUtil.stringToLocation(

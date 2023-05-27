@@ -4,10 +4,7 @@ import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.game.border.BorderHandler;
 import net.minecraft.server.v1_8_R3.BiomeBase;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.block.CraftBlock;
@@ -71,6 +68,9 @@ public class MapGenerator extends BukkitRunnable {
                 }
             }
         }
+
+        UHCMeetup.getInstance().getMapHandler().setSpectatorLocation(
+                new Location(world, 0.5D, world.getHighestBlockYAt(0, 0), 0.5D));
 
         // TODO: Check if there is too much water, if so, re-generate the world
 
