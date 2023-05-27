@@ -6,8 +6,9 @@ import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.util.PlayerUtil;
 import me.puugz.meetup.util.TimeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.function.Consumer;
 
 /**
  * @author puugz
@@ -18,12 +19,21 @@ public class Countdown extends BukkitRunnable {
 
     @Getter
     private int seconds;
-    private String what;
+    private String message;
 
     private boolean dontCancel;
     private boolean noSound;
 
     protected Runnable action;
+    protected Consumer<String> tick = new Consumer<String>() {
+        @Override
+        public void accept(String message) {
+            if (noSound)
+                Bukkit.broadcastMessage(message);
+            else
+                PlayerUtil.broadcast(message);
+        }
+    };
 
     public Countdown(int seconds) {
         this.seconds = seconds;
@@ -31,12 +41,11 @@ public class Countdown extends BukkitRunnable {
 
     public Countdown(int seconds, String what, Runnable action) {
         this.seconds = seconds;
-        this.what = what;
+        this.message = what;
         this.action = action;
     }
 
     public void start() {
-//        if (!isActive(this))
         this.runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
     }
 
@@ -51,10 +60,7 @@ public class Countdown extends BukkitRunnable {
 
         switch (this.seconds) {
             case 300: case 240: case 180: case 120: case 60: case 30: case 15: case 10: case 5: case 4: case 3: case 2: case 1: {
-                if (this.noSound)
-                    Bukkit.broadcastMessage(this.what.replace("{time}", TimeUtil.formatSeconds(this.seconds)));
-                else
-                    PlayerUtil.broadcast(this.what.replace("{time}", TimeUtil.formatSeconds(this.seconds)));
+                this.tick.accept(this.message.replace("{time}", TimeUtil.formatSeconds(this.seconds)));
             }
         }
 

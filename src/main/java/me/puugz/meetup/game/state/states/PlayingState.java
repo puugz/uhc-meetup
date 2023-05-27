@@ -78,6 +78,8 @@ public class PlayingState implements GameState {
         Countdown.cancelIfActive(this.borderCountdown);
 
         UHCMeetup.getInstance().getScenarioHandler().disable();
+        UHCMeetup.getInstance().getPlayerHandler().alive()
+                .forEach(GamePlayer::stopNoCleanTimer);
     }
 
     @EventHandler
@@ -96,6 +98,7 @@ public class PlayingState implements GameState {
 
         if (gamePlayer.state == GamePlayer.State.PLAYING) {
             gamePlayer.state = GamePlayer.State.SPECTATING;
+            gamePlayer.stopNoCleanTimer();
 
             event.setQuitMessage(this.messages.playerDisqualified
                     .replace("{player}", gamePlayer.getName()));

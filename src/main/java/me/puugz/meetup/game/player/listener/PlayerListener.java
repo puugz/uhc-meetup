@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.UUID;
@@ -41,6 +42,17 @@ public class PlayerListener implements Listener {
 
         if (plugin.getPlayerHandler().find(uuid) == null) {
             plugin.getPlayerHandler().add(uuid, event.getName());
+        }
+    }
+
+    @EventHandler
+    public void handleJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+        final GamePlayer gamePlayer = UHCMeetup.getInstance()
+                .getPlayerHandler().find(player.getUniqueId());
+
+        if (gamePlayer == null) {
+            player.kickPlayer(ChatColor.RED + "There was an error loading your data...");
         }
     }
 

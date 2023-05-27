@@ -2,6 +2,7 @@ package me.puugz.meetup.game.scenario;
 
 import lombok.Getter;
 import me.puugz.meetup.game.scenario.scenarios.TimeBombScenario;
+import me.puugz.meetup.game.scenario.scenarios.noclean.NoCleanScenario;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class ScenarioHandler {
 
     public ScenarioHandler() {
         this.register(new TimeBombScenario());
+        this.register(new NoCleanScenario());
     }
 
     public void enable() {

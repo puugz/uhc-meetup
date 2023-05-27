@@ -105,4 +105,19 @@ public class MessagesConfig {
     @Coloured
     public final String notReady = ChatColor.RED + "The server is currently booting up. Please try again in a bit.";
 
+    @Coloured
+    public final String arrowHit = ChatColor.BLUE + "{player} " + ChatColor.GRAY + "is now at " + ChatColor.RED + "{health}\u2764" + ChatColor.GRAY + ".";
+
+    @Coloured
+    public final String noCleanHostileAction = ChatColor.RED + "Your no clean timer has expired due to hostile action!";
+
+    @Coloured
+    public final String noCleanTargetExpiresIn = ChatColor.RED + "{player}'s no clean timer expires in {time}.";
+
+    @Coloured
+    public final String noCleanExpiresIn = ChatColor.RED + "Your no clean timer expires in {time}.";
+
+    @Coloured
+    public final String noCleanExpired = ChatColor.RED + "Your no clean timer has expired!";
+
 }
