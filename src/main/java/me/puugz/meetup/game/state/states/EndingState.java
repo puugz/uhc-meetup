@@ -20,7 +20,7 @@ public class EndingState extends PassiveState {
 
     @Getter
     private final Countdown countdown = new Countdown(
-            60, this.messages.serverRestarting, () -> {
+            10, this.messages.serverRestarting, () -> {
         PlayerUtil.broadcast(this.messages.serverRestart);
         Bukkit.shutdown();
     });
