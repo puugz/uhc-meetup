@@ -15,6 +15,7 @@ import me.puugz.meetup.game.state.states.StartingState;
 import me.puugz.meetup.game.state.states.WaitingState;
 import me.puugz.meetup.util.PlayerUtil;
 import me.puugz.meetup.util.TimeUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -30,10 +31,17 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
     public ScoreboardElement getElement(Player player) {
         final ScoreboardElement element = new ScoreboardElement();
 
-        final GameState state = UHCMeetup.getInstance().getStateHandler().getCurrentState();
         final PlayerHandler playerHandler = UHCMeetup.getInstance().getPlayerHandler();
+        final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
 
         element.setTitle(config.title);
+
+        if (gamePlayer == null) {
+            element.add(ChatColor.RED + "Error, please rejoin!");
+            return element;
+        }
+
+        final GameState state = UHCMeetup.getInstance().getStateHandler().getCurrentState();
 
         if (state instanceof WaitingState) {
             element.getLines().addAll(config.waiting);
@@ -46,13 +54,12 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
             }
         } else if (state instanceof PlayingState) {
             final PlayingState playingState = (PlayingState) state;
-            final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
 
             final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
-            final boolean isBorderShrinking = Countdown.isActive(playingState.getCountdown());
+            final boolean isBorderShrinking = Countdown.isActive(playingState.getBorderCountdown());
             final String borderFormat = isBorderShrinking
                     ? config.borderFormat.replace("{border_time}",
-                    "" + (playingState.getCountdown().getSeconds() + 1))
+                    "" + (playingState.getBorderCountdown().getSeconds() + 1))
                     : "";
 
             for (String line : config.playing) {
@@ -64,8 +71,6 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
                         .replace("{kills}", "" + gamePlayer.kills));
             }
         } else if (state instanceof EndingState) {
-            final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
-
             for (String line : config.ending) {
                 element.add(line
                         .replace("{kills}", "" + gamePlayer.kills)
