@@ -1,6 +1,7 @@
 package me.puugz.meetup.game.scenario.scenarios;
 
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.scenario.Scenario;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
@@ -31,9 +32,15 @@ public class TimeBombScenario extends Scenario {
         );
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOW)
     public void handleDeath(PlayerDeathEvent event) {
         final Player victim = event.getEntity();
+        final GamePlayer victimData = UHCMeetup.getInstance()
+                .getPlayerHandler().find(victim.getUniqueId());
+
+        if (victimData.state == GamePlayer.State.SPECTATING)
+            return;
+
         final String victimName = victim.getName();
         final Location location = victim.getLocation();
 

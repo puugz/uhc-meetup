@@ -23,22 +23,17 @@ public class NoCleanScenario extends Scenario {
                 "Attacking an opponent player removes the PvP protection.");
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void handleDeath(PlayerDeathEvent event) {
         final Player victim = event.getEntity();
         final Player killer = victim.getKiller();
 
-        victim.sendMessage("krepau si");
-        killer.sendMessage("JA JA");
+        if (killer != null && !killer.getUniqueId().equals(victim.getUniqueId())) {
+            final GamePlayer killerData = UHCMeetup.getInstance()
+                    .getPlayerHandler().find(killer.getUniqueId());
 
-        if (killer == null || victim.getUniqueId().equals(killer.getUniqueId()))
-            return;
-
-        final GamePlayer killerData = UHCMeetup.getInstance()
-                        .getPlayerHandler().find(killer.getUniqueId());
-
-        killer.sendMessage("no clean event");
-        killerData.noCleanTimer = new NoCleanTimer(killerData);
+            killerData.noCleanTimer = new NoCleanTimer(killerData);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -77,6 +72,7 @@ public class NoCleanScenario extends Scenario {
         if (damagerData.stopNoCleanTimer()) {
             damager.sendMessage(messages.noCleanHostileAction);
         } else if (victimData.noCleanTimer != null) {
+            event.setCancelled(true);
             damager.sendMessage(messages.noCleanTargetExpiresIn
                     .replace("{player}", victim.getName())
                     .replace("{time}", "" + TimeUtil.formatSeconds(victimData.noCleanTimer.getSeconds())));

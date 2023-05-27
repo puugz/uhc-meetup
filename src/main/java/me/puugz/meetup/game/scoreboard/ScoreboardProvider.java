@@ -63,12 +63,21 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
                     : "";
 
             for (String line : config.playing) {
-                element.add(line
-                        .replace("{border_size}", "" + borderHandler.getBorderSize())
-                        .replace("{border_format}", borderFormat)
-                        .replace("{players}", "" + playerHandler.alive().size())
-                        .replace("{ping}", "" + PlayerUtil.getPing(player))
-                        .replace("{kills}", "" + gamePlayer.kills));
+                final String finalLine = gamePlayer.noCleanTimer != null && line.contains("<no_clean_format>") ?
+                        config.noCleanFormat.replace("{time}", "" + gamePlayer.noCleanTimer.getSeconds()) :
+                        line
+                                .replace("{border_size}", "" + borderHandler.getBorderSize())
+                                .replace("<border_format>", borderFormat)
+                                .replace("{players}", "" + playerHandler.alive().size())
+                                .replace("{ping}", "" + PlayerUtil.getPing(player))
+                                .replace("{kills}", "" + gamePlayer.kills);
+
+                if (line.contains("<no_clean_format>")) {
+                    if (gamePlayer.noCleanTimer != null)
+                        element.add(finalLine);
+                } else {
+                    element.add(finalLine);
+                }
             }
         } else if (state instanceof EndingState) {
             for (String line : config.ending) {

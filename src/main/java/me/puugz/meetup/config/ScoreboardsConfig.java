@@ -37,10 +37,11 @@ public class ScoreboardsConfig {
     @Coloured
     public final List<String> playing = Arrays.asList(
             ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "--------------------",
-            "Border: " + ChatColor.BLUE + "{border_size} {border_format}",
+            "Border: " + ChatColor.BLUE + "{border_size} <border_format>",
             "Players: " + ChatColor.BLUE + "{players}",
             "Ping: " + ChatColor.BLUE + "{ping} ms",
             "Kills: " + ChatColor.BLUE + "{kills}",
+            "<no_clean_format>",
             "",
             ChatColor.BLUE + "meetup.lol",
             ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "--------------------"
@@ -58,4 +59,7 @@ public class ScoreboardsConfig {
 
     @Coloured
     public final String borderFormat = ChatColor.RESET + "(" + ChatColor.RED + "{border_time}" + ChatColor.RESET + ")";
+
+    @Coloured
+    public final String noCleanFormat = ChatColor.RED + "No Clean: {time}";
 }
