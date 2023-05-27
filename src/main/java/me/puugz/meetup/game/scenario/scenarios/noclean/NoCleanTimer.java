@@ -20,10 +20,10 @@ public class NoCleanTimer extends Countdown {
                 .getMessagesConfig();
 
         this.setNoSound(true);
-        this.setMessage(this.messages.noCleanExpiresIn);
+        this.setMessage(messages.noCleanExpiresIn);
         this.setTick(player::sendMessage);
         this.setAction(() -> {
-            player.sendMessage(this.messages.noCleanExpired);
+            player.sendMessage(messages.noCleanExpired);
             gamePlayer.noCleanTimer = null;
         });
 
