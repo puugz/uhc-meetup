@@ -37,7 +37,7 @@ public class PlayerHandler {
         this.compass = new ItemStack(Material.COMPASS);
 
         final ItemMeta meta = compass.getItemMeta();
-        meta.setDisplayName(messages.navigationItem);
+        meta.setDisplayName(this.messages.navigationItem);
         compass.setItemMeta(meta);
     }
 
@@ -65,7 +65,7 @@ public class PlayerHandler {
 
         // TODO: Add Ghost Invisibility Effect
 
-        player.sendMessage(messages.nowSpectating);
+        player.sendMessage(this.messages.nowSpectating);
         player.getActivePotionEffects().clear();
         player.setGameMode(GameMode.CREATIVE);
         player.setFlying(true);

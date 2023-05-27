@@ -43,30 +43,30 @@ public class PlayingState implements GameState {
 
     @Override
     public void enable() {
-        final AtomicInteger newBorderSize = new AtomicInteger(borderHandler.getBorderSize() > 25
-                ? borderHandler.getBorderSize() - 25
-                : borderHandler.getBorderSize() - 15);
+        final AtomicInteger newBorderSize = new AtomicInteger(this.borderHandler.getBorderSize() > 25
+                ? this.borderHandler.getBorderSize() - 25
+                : this.borderHandler.getBorderSize() - 15);
 
-        countdown.setDontCancel(true);
-        countdown.setNoSound(true);
+        this.borderCountdown.setDontCancel(true);
+        this.borderCountdown.setNoSound(true);
 
-        countdown.setWhat(messages.borderShrink.replace("{size}", newBorderSize.toString()));
-        countdown.setAction(() -> {
-            borderHandler.shrinkBorder(newBorderSize.intValue());
-            Bukkit.broadcastMessage(messages.borderShrunk
+        this.borderCountdown.setMessage(this.messages.borderShrink.replace("{size}", newBorderSize.toString()));
+        this.borderCountdown.setAction(() -> {
+            this.borderHandler.shrinkBorder(newBorderSize.intValue());
+            Bukkit.broadcastMessage(this.messages.borderShrunk
                     .replace("{size}", newBorderSize.toString()));
 
             if (newBorderSize.intValue() > 10) {
                 newBorderSize.set(borderHandler.getBorderSize() > 25
-                        ? borderHandler.getBorderSize() - 25
-                        : borderHandler.getBorderSize() - 15);
-                countdown.setWhat(messages.borderShrink.replace("{size}", newBorderSize.toString()));
-                countdown.setSeconds(BORDER_SHRINK_TIME);
+                        ? this.borderHandler.getBorderSize() - 25
+                        : this.borderHandler.getBorderSize() - 15);
+                this.borderCountdown.setMessage(this.messages.borderShrink.replace("{size}", newBorderSize.toString()));
+                this.borderCountdown.setSeconds(BORDER_SHRINK_TIME);
             } else {
-                countdown.cancel();
+                this.borderCountdown.cancel();
             }
         });
-        countdown.start();
+        this.borderCountdown.start();
 
         // TODO: Winner check runnable
         UHCMeetup.getInstance().getScenarioHandler().enable();
@@ -74,7 +74,8 @@ public class PlayingState implements GameState {
 
     @Override
     public void disable() {
-        Countdown.cancelIfActive(this.countdown);
+        Countdown.cancelIfActive(this.borderCountdown);
+
         UHCMeetup.getInstance().getScenarioHandler().disable();
     }
 
@@ -85,23 +86,23 @@ public class PlayingState implements GameState {
         event.setJoinMessage(null);
 
         PlayerUtil.clear(player);
-        playerHandler.addSpectator(player);
+        this.playerHandler.addSpectator(player);
     }
 
     @EventHandler
     public void handleQuit(PlayerQuitEvent event) {
-        final GamePlayer gamePlayer = playerHandler.find(event.getPlayer().getUniqueId());
+        final GamePlayer gamePlayer = this.playerHandler.find(event.getPlayer().getUniqueId());
 
         if (gamePlayer.state == GamePlayer.State.PLAYING) {
             gamePlayer.state = GamePlayer.State.SPECTATING;
 
-            event.setQuitMessage(messages.playerDisqualified
+            event.setQuitMessage(this.messages.playerDisqualified
                     .replace("{player}", gamePlayer.getName()));
         } else {
             event.setQuitMessage(null);
         }
 
-        playerHandler.handleWinnerCheck();
+        this.playerHandler.handleWinnerCheck();
     }
 
     @EventHandler
@@ -109,43 +110,43 @@ public class PlayingState implements GameState {
         final Player victim = event.getEntity();
         final Player killer = victim.getKiller();
 
-        final GamePlayer victimData = playerHandler.find(victim.getUniqueId());
+        final GamePlayer victimData = this.playerHandler.find(victim.getUniqueId());
 
         victimData.deathLocation = victim.getLocation();
         victimData.deaths++;
 
-        if (killer != null) {
-            final GamePlayer killerData = playerHandler.find(killer.getUniqueId());
+        if (killer != null && !killer.getUniqueId().equals(victim.getUniqueId())) {
+            final GamePlayer killerData = this.playerHandler.find(killer.getUniqueId());
             killerData.kills++;
 
-            victim.sendMessage(messages.killedBy.replace("{killer}", killer.getName()));
-            killer.sendMessage(messages.killedPlayer.replace("{victim}", victim.getName()));
+            victim.sendMessage(this.messages.killedBy.replace("{killer}", killer.getName()));
+            killer.sendMessage(this.messages.killedPlayer.replace("{victim}", victim.getName()));
 
-            event.setDeathMessage(messages.slainByKiller
+            event.setDeathMessage(this.messages.slainByKiller
                     .replace("{victim}", victim.getName())
                     .replace("{killer}", killer.getName()));
         } else {
-            event.setDeathMessage(messages.died.replace("{player}", victim.getName()));
+            event.setDeathMessage(this.messages.died.replace("{player}", victim.getName()));
         }
 
         victim.spigot().respawn();
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(UHCMeetup.getInstance(), () -> {
-            playerHandler.addSpectator(victim);
-            playerHandler.handleWinnerCheck();
+            this.playerHandler.addSpectator(victim);
+            this.playerHandler.handleWinnerCheck();
         }, 10L);
     }
 
     @EventHandler
     public void handleRespawn(PlayerRespawnEvent event) {
-        final GamePlayer gamePlayer = playerHandler.find(event.getPlayer().getUniqueId());
+        final GamePlayer gamePlayer = this.playerHandler.find(event.getPlayer().getUniqueId());
 
         if (gamePlayer.deathLocation != null)
             event.setRespawnLocation(gamePlayer.deathLocation);
     }
 
     @EventHandler
-    public void handleGoldenApple(PlayerItemConsumeEvent event) {
+    public void handleGoldenHead(PlayerItemConsumeEvent event) {
         final ItemStack item = event.getItem();
 
         if (item.isSimilar(PlayerUtil.GOLDEN_HEAD)) {
@@ -159,11 +160,9 @@ public class PlayingState implements GameState {
      */
     @EventHandler
     public void handleInteraction(PlayerInteractEvent event) {
-        final Player player = event.getPlayer();
-        event.setCancelled(this.isSpectating(player));
+        event.setCancelled(this.isSpectating(event.getPlayer()));
     }
 
-    // TODO: Add arrow hit information
     @EventHandler
     public void handleEntityDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player))
@@ -175,26 +174,22 @@ public class PlayingState implements GameState {
 
     @EventHandler
     public void handleBlockPlace(BlockPlaceEvent event) {
-        final Player player = event.getPlayer();
-        event.setCancelled(this.isSpectating(player));
+        event.setCancelled(this.isSpectating(event.getPlayer()));
     }
 
     @EventHandler
     public void handleBlockBreak(BlockBreakEvent event) {
-        final Player player = event.getPlayer();
-        event.setCancelled(this.isSpectating(player));
+        event.setCancelled(this.isSpectating(event.getPlayer()));
     }
 
     @EventHandler
     public void handleItemDrop(PlayerDropItemEvent event) {
-        final Player player = event.getPlayer();
-        event.setCancelled(this.isSpectating(player));
+        event.setCancelled(this.isSpectating(event.getPlayer()));
     }
 
     @EventHandler
     public void handleItemPickup(PlayerPickupItemEvent event) {
-        final Player player = event.getPlayer();
-        event.setCancelled(this.isSpectating(player));
+        event.setCancelled(this.isSpectating(event.getPlayer()));
     }
 
     private boolean isSpectating(Player player) {

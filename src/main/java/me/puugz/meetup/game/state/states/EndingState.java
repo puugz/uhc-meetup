@@ -8,7 +8,6 @@ import me.puugz.meetup.game.state.PassiveState;
 import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 /**
  * @author puugz
@@ -21,20 +20,20 @@ public class EndingState extends PassiveState {
 
     @Getter
     private final Countdown countdown = new Countdown(
-            60, messages.serverRestarting, () -> {
-        PlayerUtil.broadcast(messages.serverRestart);
+            60, this.messages.serverRestarting, () -> {
+        PlayerUtil.broadcast(this.messages.serverRestart);
         Bukkit.shutdown();
     });
 
     @Override
     public void enable() {
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(messages.win
+        Bukkit.broadcastMessage(this.messages.win
                 .replace("{winner}", UHCMeetup.getInstance().getPlayerHandler().getWinnerName()));
         Bukkit.broadcastMessage("");
 
         // TODO: Save data to database
-        countdown.start();
+        this.countdown.start();
     }
 
     @Override

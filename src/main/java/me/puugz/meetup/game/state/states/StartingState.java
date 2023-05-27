@@ -24,15 +24,16 @@ public class StartingState extends PassiveState {
             .getMessagesConfig();
 
     @Getter
-    private final Countdown countdown = new Countdown(
-            60, messages.gameStarting, () -> {
-        PlayerUtil.broadcast(messages.gameStarted);
-        UHCMeetup.getInstance().getStateHandler().next();
-    });
+    private Countdown countdown;
 
     @Override
     public void enable() {
-        countdown.start();
+        this.countdown = new Countdown(
+                60, this.messages.gameStarting, () -> {
+            PlayerUtil.broadcast(this.messages.gameStarted);
+            UHCMeetup.getInstance().getStateHandler().next();
+        });
+        this.countdown.start();
 
         for (Player player : UHCMeetup.getInstance()
                 .getPlayerHandler()
@@ -58,7 +59,7 @@ public class StartingState extends PassiveState {
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
-        event.setJoinMessage(messages.playerJoined
+        event.setJoinMessage(this.messages.playerJoined
                 .replace("{player}", player.getName()));
         this.preparePlayer(player);
     }
@@ -69,11 +70,11 @@ public class StartingState extends PassiveState {
         final int numOfWaiting = UHCMeetup.getInstance()
                 .getPlayerHandler().alive().size();
 
-        event.setQuitMessage(messages.playerQuit
+        event.setQuitMessage(this.messages.playerQuit
                 .replace("{player}", player.getName()));
 
         if (numOfWaiting < 2 && Countdown.isActive(this.countdown)) {
-            Bukkit.broadcastMessage(messages.startingCancelled);
+            Bukkit.broadcastMessage(this.messages.startingCancelled);
             UHCMeetup.getInstance().getStateHandler().setState(GameState.WAITING);
         }
     }

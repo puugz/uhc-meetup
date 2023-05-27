@@ -46,7 +46,7 @@ public class NavigationMenu extends Menu {
 
         if (target != null) {
             event.getWhoClicked().teleport(target);
-            event.getWhoClicked().sendMessage(messages.teleportedTo
+            event.getWhoClicked().sendMessage(this.messages.teleportedTo
                     .replace("{player}", target.getName()));
         }
     }
@@ -59,7 +59,7 @@ public class NavigationMenu extends Menu {
 
             meta.setOwner(gamePlayer.getName());
             meta.setDisplayName(ChatColor.GOLD + gamePlayer.getName());
-            meta.setLore(Collections.singletonList(messages.clickToTeleport));
+            meta.setLore(Collections.singletonList(this.messages.clickToTeleport));
             head.setItemMeta(meta);
 
             this.inventory.addItem(head);

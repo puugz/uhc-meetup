@@ -5,7 +5,6 @@ import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.PassiveState;
 import me.puugz.meetup.util.PlayerUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -29,13 +28,13 @@ public class WaitingState extends PassiveState {
                 .getMapHandler().getSpawnLocation());
 
         PlayerUtil.clear(player);
-        event.setJoinMessage(messages.playerJoined
+        event.setJoinMessage(this.messages.playerJoined
                 .replace("{player}", player.getName()));
 
         if (numOfWaiting >= 2) {
             UHCMeetup.getInstance().getStateHandler().next();
         } else {
-            player.sendMessage(messages.minimumRequiredPlayers
+            player.sendMessage(this.messages.minimumRequiredPlayers
                     .replace("{min}", "2"));
         }
     }
