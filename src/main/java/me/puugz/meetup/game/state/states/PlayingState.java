@@ -33,7 +33,7 @@ public class PlayingState implements GameState {
     private static final int BORDER_SHRINK_TIME = 120;
 
     @Getter
-    private final Countdown countdown = new Countdown(BORDER_SHRINK_TIME);
+    private final Countdown borderCountdown = new Countdown(BORDER_SHRINK_TIME);
 
     private final MessagesConfig messages = UHCMeetup.getInstance()
             .getMessagesConfig();
