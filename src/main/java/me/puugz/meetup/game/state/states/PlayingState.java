@@ -10,6 +10,8 @@ import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.countdown.Countdown;
 import me.puugz.meetup.util.PlayerUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -87,10 +89,10 @@ public class PlayingState implements GameState {
         final Player player = event.getPlayer();
 
         event.setJoinMessage(null);
-
         PlayerUtil.clear(player);
-        player.teleport(UHCMeetup.getInstance()
-                .getMapHandler().getSpectatorLocation());
+
+        final World world = UHCMeetup.getInstance().getMapHandler().getMapWorld();
+        player.teleport(new Location(world, 0.5D, world.getHighestBlockYAt(0, 0), 0.5D));
 
         this.playerHandler.addSpectator(player);
     }

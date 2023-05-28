@@ -21,8 +21,6 @@ public class MapHandler {
 
     private Location spawnLocation;
 
-    private Location spectatorLocation;
-
     public MapHandler() {
         this.spawnLocation = LocationUtil.stringToLocation(
                 UHCMeetup.getInstance()

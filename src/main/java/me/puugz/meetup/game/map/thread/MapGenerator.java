@@ -69,9 +69,6 @@ public class MapGenerator extends BukkitRunnable {
             }
         }
 
-        UHCMeetup.getInstance().getMapHandler().setSpectatorLocation(
-                new Location(world, 0.5D, world.getHighestBlockYAt(0, 0), 0.5D));
-
         // TODO: Check if there is too much water, if so, re-generate the world
 
         // Set the world border & generate the bedrock walls
