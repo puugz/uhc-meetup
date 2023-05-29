@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.border.BorderHandler;
+import me.puugz.meetup.game.event.CustomDeathEvent;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.player.PlayerHandler;
 import me.puugz.meetup.game.state.GameState;
@@ -18,12 +19,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -43,6 +47,8 @@ public class PlayingState implements GameState {
 
     private final PlayerHandler playerHandler = UHCMeetup.getInstance().getPlayerHandler();
     private final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
+
+    private final Map<UUID, UUID> lastHitByMap = new HashMap<>();
 
     @Override
     public void enable() {
@@ -120,43 +126,51 @@ public class PlayingState implements GameState {
     }
 
     @EventHandler
-    public void handleDeath(PlayerDeathEvent event) {
-        final Player victim = event.getEntity();
-        final Player killer = victim.getKiller();
+    public void handleDeath(CustomDeathEvent event) {
+        final Player victim = event.getVictim();
+        final Player killer = event.getKiller();
 
         final GamePlayer victimData = this.playerHandler.find(victim.getUniqueId());
+        victimData.setDeaths(victimData.getDeaths() + 1);
 
-        victimData.deathLocation = victim.getLocation();
-        victimData.deaths++;
+        this.playerHandler.addSpectator(victim);
 
         if (killer != null && !killer.getUniqueId().equals(victim.getUniqueId())) {
             final GamePlayer killerData = this.playerHandler.find(killer.getUniqueId());
-            killerData.kills++;
+            killerData.setLocalKills(killerData.getLocalKills() + 1);
 
             victim.sendMessage(this.messages.killedBy.replace("{killer}", killer.getName()));
             killer.sendMessage(this.messages.killedPlayer.replace("{victim}", victim.getName()));
 
-            event.setDeathMessage(this.messages.slainByKiller
+            Bukkit.broadcastMessage(this.messages.slainByKiller
                     .replace("{victim}", victim.getName())
                     .replace("{killer}", killer.getName()));
         } else {
-            event.setDeathMessage(this.messages.died.replace("{player}", victim.getName()));
+            Bukkit.broadcastMessage(this.messages.died.replace("{player}", victim.getName()));
         }
 
-        victim.spigot().respawn();
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(UHCMeetup.getInstance(), () -> {
-            this.playerHandler.addSpectator(victim);
-            this.playerHandler.handleWinnerCheck();
-        }, 10L);
+        this.playerHandler.handleWinnerCheck();
     }
 
     @EventHandler
-    public void handleRespawn(PlayerRespawnEvent event) {
-        final GamePlayer gamePlayer = this.playerHandler.find(event.getPlayer().getUniqueId());
+    public void handleDeath(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
 
-        if (gamePlayer.deathLocation != null)
-            event.setRespawnLocation(gamePlayer.deathLocation);
+        final Player victim = (Player) event.getEntity();
+        final double health = victim.getHealth() - event.getFinalDamage();
+
+        if (health < 0) {
+            event.setCancelled(true);
+
+            Player killer = null;
+            if (this.lastHitByMap.containsKey(victim.getUniqueId())) {
+                killer = Bukkit.getPlayer(this.lastHitByMap.get(victim.getUniqueId()));
+            }
+
+            final CustomDeathEvent deathEvent = new CustomDeathEvent(victim, killer);
+            Bukkit.getPluginManager().callEvent(deathEvent);
+        }
     }
 
     @EventHandler
@@ -190,21 +204,28 @@ public class PlayingState implements GameState {
                     .replace("{health}", "" + health));
     }
 
-    /**
-     * Spectator events
-     */
-    @EventHandler
-    public void handleInteraction(PlayerInteractEvent event) {
-        event.setCancelled(this.isSpectating(event.getPlayer()));
-    }
-
     @EventHandler
     public void handleEntityDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player))
             return;
 
-        final Player player = (Player) event.getDamager();
-        event.setCancelled(this.isSpectating(player));
+        final Player damager = (Player) event.getDamager();
+
+        if (this.isSpectating(damager)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player))
+            return;
+
+        final Player player = (Player) event.getEntity();
+        this.lastHitByMap.put(player.getUniqueId(), damager.getUniqueId());
+    }
+
+    @EventHandler
+    public void handleInteraction(PlayerInteractEvent event) {
+        event.setCancelled(this.isSpectating(event.getPlayer()));
     }
 
     @EventHandler

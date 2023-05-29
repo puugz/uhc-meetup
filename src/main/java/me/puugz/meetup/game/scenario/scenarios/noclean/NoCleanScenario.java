@@ -2,6 +2,7 @@ package me.puugz.meetup.game.scenario.scenarios.noclean;
 
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.game.event.CustomDeathEvent;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.scenario.Scenario;
 import me.puugz.meetup.util.TimeUtil;
@@ -10,7 +11,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
  * @author puugz
@@ -24,8 +24,8 @@ public class NoCleanScenario extends Scenario {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void handleDeath(PlayerDeathEvent event) {
-        final Player victim = event.getEntity();
+    public void handleDeath(CustomDeathEvent event) {
+        final Player victim = event.getVictim();
         final Player killer = victim.getKiller();
 
         if (killer != null && !killer.getUniqueId().equals(victim.getUniqueId())) {

@@ -1,6 +1,7 @@
 package me.puugz.meetup.game.scenario.scenarios;
 
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.game.event.CustomDeathEvent;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.scenario.Scenario;
 import me.puugz.meetup.util.PlayerUtil;
@@ -11,7 +12,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -33,8 +33,8 @@ public class TimeBombScenario extends Scenario {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void handleDeath(PlayerDeathEvent event) {
-        final Player victim = event.getEntity();
+    public void handleDeath(CustomDeathEvent event) {
+        final Player victim = event.getVictim();
         final GamePlayer victimData = UHCMeetup.getInstance()
                 .getPlayerHandler().find(victim.getUniqueId());
 
@@ -53,7 +53,6 @@ public class TimeBombScenario extends Scenario {
                 .filter(item -> item != null && item.getType() != Material.AIR)
                 .forEach(items::add);
 
-        event.getDrops().clear();
         location.getBlock().setType(Material.CHEST);
 
         final Chest chest = (Chest) location.getBlock().getState();

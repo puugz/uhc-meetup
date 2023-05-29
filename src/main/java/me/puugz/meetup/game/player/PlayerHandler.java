@@ -1,19 +1,18 @@
 package me.puugz.meetup.game.player;
 
+import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import me.puugz.meetup.game.state.states.PlayingState;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -54,14 +53,6 @@ public class PlayerHandler {
             else
                 otherPlayer.showPlayer(player);
         });
-
-        if (gamePlayer.deathLocation != null)
-            player.teleport(gamePlayer.deathLocation);
-        else
-            player.teleport(UHCMeetup.getInstance()
-                    .getMapHandler().getMapWorld()
-                    .getSpawnLocation()
-            );
 
         // TODO: Add Ghost Invisibility Effect
 
