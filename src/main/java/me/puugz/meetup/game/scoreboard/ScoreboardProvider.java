@@ -63,17 +63,17 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
                     : "";
 
             for (String line : config.playing) {
-                final String finalLine = gamePlayer.noCleanTimer != null && line.contains("<no_clean_format>") ?
-                        config.noCleanFormat.replace("{time}", "" + gamePlayer.noCleanTimer.getSeconds()) :
+                final String finalLine = gamePlayer.getNoCleanTimer() != null && line.contains("<no_clean_format>") ?
+                        config.noCleanFormat.replace("{time}", "" + gamePlayer.getNoCleanTimer().getSeconds()) :
                         line
                                 .replace("{border_size}", "" + borderHandler.getBorderSize())
                                 .replace("<border_format>", borderFormat)
                                 .replace("{players}", "" + playerHandler.alive().size())
                                 .replace("{ping}", "" + PlayerUtil.getPing(player))
-                                .replace("{kills}", "" + gamePlayer.kills);
+                                .replace("{kills}", "" + gamePlayer.getLocalKills());
 
                 if (line.contains("<no_clean_format>")) {
-                    if (gamePlayer.noCleanTimer != null)
+                    if (gamePlayer.getNoCleanTimer() != null)
                         element.add(finalLine);
                 } else {
                     element.add(finalLine);
@@ -82,7 +82,7 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
         } else if (state instanceof EndingState) {
             for (String line : config.ending) {
                 element.add(line
-                        .replace("{kills}", "" + gamePlayer.kills)
+                        .replace("{kills}", "" + gamePlayer.getLocalKills())
                         .replace("{winner}", playerHandler.getWinnerName()));
             }
         }

@@ -32,7 +32,7 @@ public class NoCleanScenario extends Scenario {
             final GamePlayer killerData = UHCMeetup.getInstance()
                     .getPlayerHandler().find(killer.getUniqueId());
 
-            killerData.noCleanTimer = new NoCleanTimer(killerData);
+            killerData.setNoCleanTimer(new NoCleanTimer(killerData));
         }
     }
 
@@ -59,7 +59,7 @@ public class NoCleanScenario extends Scenario {
         final GamePlayer damagerData = UHCMeetup.getInstance()
                 .getPlayerHandler().find(damager.getUniqueId());
 
-        if (damagerData.state == GamePlayer.State.SPECTATING)
+        if (damagerData.getState() == GamePlayer.State.SPECTATING)
             return;
 
         final Player victim = (Player) event.getEntity();
@@ -71,11 +71,11 @@ public class NoCleanScenario extends Scenario {
 
         if (damagerData.stopNoCleanTimer()) {
             damager.sendMessage(messages.noCleanHostileAction);
-        } else if (victimData.noCleanTimer != null) {
+        } else if (victimData.getNoCleanTimer() != null) {
             event.setCancelled(true);
             damager.sendMessage(messages.noCleanTargetExpiresIn
                     .replace("{player}", victim.getName())
-                    .replace("{time}", "" + TimeUtil.formatSeconds(victimData.noCleanTimer.getSeconds())));
+                    .replace("{time}", "" + TimeUtil.formatSeconds(victimData.getNoCleanTimer().getSeconds())));
         }
     }
 }

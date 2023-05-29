@@ -30,7 +30,7 @@ public class PlayerListener implements Listener {
 
     private final UHCMeetup plugin = UHCMeetup.getInstance();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void handlePreLogin(AsyncPlayerPreLoginEvent event) {
         if (!plugin.isReady()) {
             event.setKickMessage(Color.translate(plugin.getMessagesConfig().notReady));
@@ -39,21 +39,31 @@ public class PlayerListener implements Listener {
         }
 
         final UUID uuid = event.getUniqueId();
+        final String name = event.getName();
 
-        if (plugin.getPlayerHandler().find(uuid) == null) {
-            plugin.getPlayerHandler().add(uuid, event.getName());
-        }
+        final GamePlayer gamePlayer = plugin.getPlayerHandler().load(uuid, name);
+        gamePlayer.setState(GamePlayer.State.PLAYING);
+
+        if (gamePlayer.getFirstJoin() == -1L)
+            gamePlayer.setFirstJoin(System.currentTimeMillis());
     }
 
     @EventHandler
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        final GamePlayer gamePlayer = UHCMeetup.getInstance()
+        final GamePlayer gamePlayer = plugin
                 .getPlayerHandler().find(player.getUniqueId());
 
-        if (gamePlayer == null) {
+        if (gamePlayer == null)
             player.kickPlayer(ChatColor.RED + "There was an error loading your data...");
-        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void handleQuit(PlayerQuitEvent event) {
+        final GamePlayer gamePlayer = plugin
+                .getPlayerHandler().find(event.getPlayer().getUniqueId());
+        if (gamePlayer != null)
+            gamePlayer.saveAsync();
     }
 
     @EventHandler
@@ -66,7 +76,7 @@ public class PlayerListener implements Listener {
                 .getPlayerHandler().find(player.getUniqueId());
 
         if (event.getItem().getType() == Material.COMPASS &&
-                gamePlayer.state == GamePlayer.State.SPECTATING
+                gamePlayer.getState() == GamePlayer.State.SPECTATING
         ) {
             event.setCancelled(true);
             player.closeInventory();
@@ -80,12 +90,12 @@ public class PlayerListener implements Listener {
         final GamePlayer gamePlayer = plugin
                 .getPlayerHandler().find(player.getUniqueId());
 
-        if (gamePlayer.state == GamePlayer.State.SPECTATING) {
-            event.setFormat(UHCMeetup.getInstance().getMessagesConfig().spectatorPrefix
+        if (gamePlayer.getState() == GamePlayer.State.SPECTATING) {
+            event.setFormat(plugin.getMessagesConfig().spectatorPrefix
                     .replace("{format}", event.getFormat()));
             event.getRecipients().removeIf(recipient -> plugin.getPlayerHandler()
                     .find(recipient.getUniqueId())
-                    .state == GamePlayer.State.PLAYING);
+                    .getState() == GamePlayer.State.PLAYING);
         }
     }
 
@@ -95,7 +105,7 @@ public class PlayerListener implements Listener {
                 .getPlayerHandler()
                 .find(event.getWhoClicked().getUniqueId());
 
-        event.setCancelled(gamePlayer.state == GamePlayer.State.SPECTATING);
+        event.setCancelled(gamePlayer.getState() == GamePlayer.State.SPECTATING);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -107,7 +117,7 @@ public class PlayerListener implements Listener {
         final GamePlayer gamePlayer = plugin
                 .getPlayerHandler()
                 .find(event.getWhoClicked().getUniqueId());
-        event.setCancelled(gamePlayer.state == GamePlayer.State.SPECTATING);
+        event.setCancelled(gamePlayer.getState() == GamePlayer.State.SPECTATING);
 
         final InventoryHolder holder = event.getInventory().getHolder();
 

@@ -46,6 +46,11 @@ public class PlayingState implements GameState {
 
     @Override
     public void enable() {
+        UHCMeetup.getInstance()
+                .getPlayerHandler()
+                .alive()
+                .forEach(it -> it.setGamesPlayed(it.getGamesPlayed() + 1));
+
         final AtomicInteger newBorderSize = new AtomicInteger(this.borderHandler.getBorderSize() > 25
                 ? this.borderHandler.getBorderSize() - 25
                 : this.borderHandler.getBorderSize() - 15);
@@ -101,8 +106,8 @@ public class PlayingState implements GameState {
     public void handleQuit(PlayerQuitEvent event) {
         final GamePlayer gamePlayer = this.playerHandler.find(event.getPlayer().getUniqueId());
 
-        if (gamePlayer.state == GamePlayer.State.PLAYING) {
-            gamePlayer.state = GamePlayer.State.SPECTATING;
+        if (gamePlayer.getState() == GamePlayer.State.PLAYING) {
+            gamePlayer.setState(GamePlayer.State.SPECTATING);
             gamePlayer.stopNoCleanTimer();
 
             event.setQuitMessage(this.messages.playerDisqualified
@@ -224,7 +229,7 @@ public class PlayingState implements GameState {
 
     private boolean isSpectating(Player player) {
         final GamePlayer gamePlayer = playerHandler.find(player.getUniqueId());
-        return gamePlayer.state == GamePlayer.State.SPECTATING;
+        return gamePlayer.getState() == GamePlayer.State.SPECTATING;
     }
 
     @Override

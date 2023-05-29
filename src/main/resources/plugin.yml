@@ -10,3 +10,5 @@ commands:
     permission: uhcmeetup.command.forcestart
   setspawn:
     permission: uhcmeetup.command.setspawn
+  stats:
+    aliases: [statistics]

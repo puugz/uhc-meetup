@@ -38,7 +38,7 @@ public class TimeBombScenario extends Scenario {
         final GamePlayer victimData = UHCMeetup.getInstance()
                 .getPlayerHandler().find(victim.getUniqueId());
 
-        if (victimData.state == GamePlayer.State.SPECTATING)
+        if (victimData.getState() == GamePlayer.State.SPECTATING)
             return;
 
         final String victimName = victim.getName();

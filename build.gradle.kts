@@ -20,6 +20,8 @@ repositories {
 dependencies {
     implementation("xyz.mkotb:config-api:1.0.1") // my fork in maven local repo
     implementation("com.github.puugz:ScoreboardAPI:f395b4bb0e")
+    implementation("org.mongodb:mongodb-driver:3.12.12")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     compileOnly("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
 
