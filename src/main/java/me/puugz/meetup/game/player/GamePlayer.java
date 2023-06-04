@@ -27,7 +27,7 @@ public class GamePlayer {
 
     private int localKills;
 
-    @Expose private long firstJoin;
+    @Expose private long firstJoin = -1L;
     @Expose private int kills;
     @Expose private int deaths;
     @Expose private int gamesPlayed;
