@@ -3,13 +3,14 @@ package me.puugz.meetup.config;
 import org.bukkit.ChatColor;
 import xyz.mkotb.configapi.Coloured;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author puugz
  * @since May 22, 2023
  */
 public class MessagesConfig {
-
-    // TODO: Organize (preferably into sections)
 
     @Coloured
     public final String navigationMenuTitle = ChatColor.GRAY + "Navigation";
@@ -120,4 +121,21 @@ public class MessagesConfig {
     @Coloured
     public final String noCleanExpired = ChatColor.RED + "Your no clean timer has expired!";
 
+    @Coloured
+    public final String fetchingDataError = ChatColor.RED + "Couldn't fetch data for {player}: {reason}";
+
+    @Coloured
+    public final String noPlayerData = ChatColor.RED + "A player with that name does not exist in the database!";
+
+    @Coloured
+    public final List<String> stats = Arrays.asList(
+            ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "-----------------",
+            ChatColor.BLUE + "{player}'s " + ChatColor.RESET + "stats:",
+            "",
+            ChatColor.GRAY + "- " + ChatColor.BLUE + "Kills: " + ChatColor.RESET + "{kills}",
+            ChatColor.GRAY + "- " + ChatColor.BLUE + "Deaths: " + ChatColor.RESET + "{deaths}",
+            ChatColor.GRAY + "- " + ChatColor.BLUE + "Games Played: " + ChatColor.RESET + "{games_played}",
+            ChatColor.GRAY + "- " + ChatColor.BLUE + "Games Won: " + ChatColor.RESET + "{games_won}",
+            ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "-----------------"
+    );
 }

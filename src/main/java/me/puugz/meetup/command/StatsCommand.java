@@ -2,7 +2,6 @@ package me.puugz.meetup.command;
 
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,26 +39,29 @@ public class StatsCommand implements CommandExecutor {
                 .find(targetName)
                 .whenComplete(((gamePlayer, throwable) -> {
                     if (throwable != null) {
-                        sender.sendMessage(ChatColor.RED + "Couldn't fetch data for " + finalTargetName + ": " + throwable.getMessage());
+                        sender.sendMessage(messages.fetchingDataError
+                                .replace("{player}", finalTargetName)
+                                .replace("{reason}", throwable.getMessage()));
                     } else {
                         if (gamePlayer != null) {
                             UHCMeetup.getInstance().getPlayerHandler()
                                     .getPlayers()
                                     .computeIfAbsent(gamePlayer.getUuid(), uuid -> gamePlayer);
 
-                            sender.sendMessage(ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "-----------------");
-                            sender.sendMessage(ChatColor.BLUE + gamePlayer.getName() +  "'s " + ChatColor.RESET + "stats:");
-                            sender.sendMessage("");
-                            sender.sendMessage(ChatColor.GRAY + "» " + ChatColor.BLUE + "Kills: " + ChatColor.RESET + gamePlayer.getKills());
-                            sender.sendMessage(ChatColor.GRAY + "» " + ChatColor.BLUE + "Deaths: " + ChatColor.RESET + gamePlayer.getDeaths());
-                            sender.sendMessage(ChatColor.GRAY + "» " + ChatColor.BLUE + "Games Played: " + ChatColor.RESET + gamePlayer.getGamesPlayed());
-                            sender.sendMessage(ChatColor.GRAY + "» " + ChatColor.BLUE + "Games Won: " + ChatColor.RESET + gamePlayer.getGamesWon());
-                            sender.sendMessage(ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "-----------------");
+                            for (String s : messages.stats) {
+                                sender.sendMessage(s
+                                        .replace("{player}", gamePlayer.getName())
+                                        .replace("{kills}", "" + gamePlayer.getKills())
+                                        .replace("{deaths}", "" + gamePlayer.getDeaths())
+                                        .replace("{games_played}", "" + gamePlayer.getGamesPlayed())
+                                        .replace("{games_won}", "" + gamePlayer.getGamesWon())
+                                );
+                            }
 
                             return;
                         }
 
-                        sender.sendMessage(ChatColor.RED + "There is not a player with that name in the database!");
+                        sender.sendMessage(messages.noPlayerData);
                     }
                 }));
 
