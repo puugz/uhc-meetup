@@ -92,7 +92,9 @@ public class UHCMeetup extends JavaPlugin {
                 .values()
                 .forEach(GamePlayer::save);
 
-        this.mongoHandler.close();
+        if (this.mongoHandler != null)
+            this.mongoHandler.close();
+
         this.saveConfig();
     }
 }
