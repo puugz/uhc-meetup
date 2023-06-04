@@ -1,11 +1,10 @@
 # UHC Meetup
 
 ### TODO:
-- [x] Scenarios
-- [ ] Scenario voting
-- [x] Kits / Load-outs
-- [ ] Database
 - [ ] Leaderboards
+- [ ] Scenario voting
+- [x] Scenarios
+- [x] Kits / Load-outs
+- [x] Database
 - [x] Lobby spawn
 - [x] Border shrinking
-- [ ] 1.7 border glass
