@@ -34,7 +34,7 @@ public class LocationUtil {
             y = world.getHighestBlockYAt(x, z);
         } while (y < 63 || world.getBlockAt(x, y, z).getRelative(BlockFace.DOWN).isLiquid());
 
-        return new Location(world, x, y, z);
+        return new Location(world, x + 0.5, y, z + 0.5);
     }
 
     public String locationToString(Location location) {
@@ -58,5 +58,4 @@ public class LocationUtil {
                 Float.parseFloat(parts[5])
         );
     }
-
 }
