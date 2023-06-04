@@ -5,8 +5,8 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
-import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.game.player.GamePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author puugz
@@ -21,17 +21,18 @@ public class MongoHandler {
     private final MongoRepository<GamePlayer> playerRepository;
 
     public MongoHandler() {
-        final SettingsConfig settings = UHCMeetup.getInstance().getSettingsConfig();
+        final ConfigurationSection mongo = UHCMeetup.getInstance().getConfig()
+                .getConfigurationSection("mongo");
 
-        final String host = settings.mongo.host;
-        final int port = settings.mongo.port;
-        final String database = settings.mongo.database;
+        final String host = mongo.getString("host");
+        final int port = mongo.getInt("port");
+        final String database = mongo.getString("database");
 
-        if (!settings.mongo.authentication.enabled) {
+        if (!mongo.getBoolean("authentication.enabled")) {
             this.client = new MongoClient(new MongoClientURI("mongodb://" + host + ":" + port));
         } else {
-            final String user = settings.mongo.authentication.user;
-            final String password = settings.mongo.authentication.password;
+            final String user = mongo.getString("authentication.user");
+            final String password = mongo.getString("authentication.password");
 
             this.client = new MongoClient(new MongoClientURI("mongodb://" + user + ":" + password + "@" + host + ":" + port));
         }

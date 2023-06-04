@@ -1,1 +1,14 @@
 spawn-location: "world, 0.5, 64.0, 0.5, 0.0, 0.0"
+
+# must not be under 10
+# value decreases by 25
+starting-border: 125
+
+mongo:
+  host: "127.0.0.1"
+  port: 27017
+  database: "uhc_meetup"
+  authentication:
+    enabled: false
+    user: "admin"
+    password: "p4ssw0rd"

@@ -10,7 +10,6 @@ import me.puugz.meetup.command.SetSpawnCommand;
 import me.puugz.meetup.command.StatsCommand;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.config.ScoreboardsConfig;
-import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.kit.KitHandler;
 import me.puugz.meetup.game.map.MapHandler;
@@ -44,7 +43,6 @@ public class UHCMeetup extends JavaPlugin {
     private boolean ready;
 
     private ConfigFactory configFactory;
-    private SettingsConfig settingsConfig;
     private MessagesConfig messagesConfig;
     private ScoreboardsConfig scoreboardsConfig;
 
@@ -60,12 +58,10 @@ public class UHCMeetup extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        // Tried to use a class-based config for settings,
-        // but had a stack overflow upon saving
+        this.getConfig().options().copyDefaults(true);
         this.saveDefaultConfig();
 
         this.configFactory = ConfigFactory.newFactory(this);
-        this.settingsConfig = this.configFactory.fromFile("settings", SettingsConfig.class);
         this.messagesConfig = this.configFactory.fromFile("messages", MessagesConfig.class);
         this.scoreboardsConfig = this.configFactory.fromFile("scoreboards", ScoreboardsConfig.class);
 
