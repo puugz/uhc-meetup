@@ -78,6 +78,8 @@ public class UHCMeetup extends JavaPlugin {
         this.getCommand("forcestart").setExecutor(new ForceStartCommand());
         this.getCommand("setspawn").setExecutor(new SetSpawnCommand());
         this.getCommand("stats").setExecutor(new StatsCommand());
+
+        this.getServer().getPluginManager().registerEvents(this.borderHandler, this);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         this.ready = true;

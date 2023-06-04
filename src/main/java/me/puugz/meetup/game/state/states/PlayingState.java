@@ -230,12 +230,44 @@ public class PlayingState implements GameState {
 
     @EventHandler
     public void handleBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(this.isSpectating(event.getPlayer()));
+        if (this.isSpectating(event.getPlayer())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        final Location blockLocation = event.getBlock().getLocation();
+        final int borderSize = borderHandler.getBorderSize();
+
+        final double x = blockLocation.getX();
+        final double z = blockLocation.getZ();
+
+        if (x >= borderSize - 1 || x <= -borderSize
+                || z >= borderSize - 1 || z <= -borderSize
+        ) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(messages.cantPlaceBlocksHere);
+        }
     }
 
     @EventHandler
     public void handleBlockBreak(BlockBreakEvent event) {
-        event.setCancelled(this.isSpectating(event.getPlayer()));
+        if (this.isSpectating(event.getPlayer())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        final Location blockLocation = event.getBlock().getLocation();
+        final int borderSize = borderHandler.getBorderSize();
+
+        final double x = blockLocation.getX();
+        final double z = blockLocation.getZ();
+
+        if (x >= borderSize - 1 || x <= -borderSize
+                || z >= borderSize - 1 || z <= -borderSize
+        ) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(messages.cantBreakBlocksHere);
+        }
     }
 
     @EventHandler

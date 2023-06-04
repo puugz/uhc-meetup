@@ -138,4 +138,10 @@ public class MessagesConfig {
             ChatColor.GRAY + "- " + ChatColor.BLUE + "Games Won: " + ChatColor.RESET + "{games_won}",
             ChatColor.GRAY + ChatColor.STRIKETHROUGH.toString() + "-----------------"
     );
+
+    @Coloured
+    public final String cantPlaceBlocksHere = ChatColor.RED + "You can't place blocks here!";
+
+    @Coloured
+    public final String cantBreakBlocksHere = ChatColor.RED + "You can't break blocks here!";
 }

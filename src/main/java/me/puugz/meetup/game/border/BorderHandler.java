@@ -15,11 +15,7 @@ import java.util.List;
  * @author puugz
  * @since May 19, 2023
  */
-public class BorderHandler {
-
-    /**
-     * TODO: Implement glass border for 1.7
-     */
+public class BorderHandler implements Listener {
 
     @Getter
     @Setter
@@ -41,6 +37,20 @@ public class BorderHandler {
                     Material.HUGE_MUSHROOM_2
             );
 
+    @EventHandler
+    public void handleMove(PlayerMoveEvent event) {
+        if (event.getFrom().getX() == event.getTo().getX() ||
+                event.getFrom().getZ() == event.getTo().getZ())
+            return;
+
+        if (this.isOutsideBorder(event.getTo(), this.borderSize)) {
+            final Player player = event.getPlayer();
+
+            player.setVelocity(event.getFrom().toVector().subtract(event.getTo().toVector()).normalize());
+            player.sendMessage(ChatColor.RED + "You have reached the border!");
+        }
+    }
+
     public void shrinkBorder(int newBorderSize) {
         final World world = UHCMeetup.getInstance()
                 .getMapHandler().getMapWorld();
@@ -49,7 +59,7 @@ public class BorderHandler {
 
         Bukkit.getOnlinePlayers()
                 .stream()
-                .filter(player -> !this.isInsideBorder(player.getLocation(), newBorderSize))
+                .filter(player -> this.isOutsideBorder(player.getLocation(), newBorderSize))
                 .forEach(player -> {
                     player.teleport(LocationUtil.getScatterLocation(newBorderSize));
                     player.sendMessage(messages.teleportInsideBorder);
@@ -60,8 +70,8 @@ public class BorderHandler {
         this.generateBedrockWall(world);
     }
 
-    private boolean isInsideBorder(Location location, int borderSize) {
-        return Math.abs(location.getX()) <= borderSize && Math.abs(location.getZ()) <= borderSize;
+    private boolean isOutsideBorder(Location location, int borderSize) {
+        return !(Math.abs(location.getX()) <= borderSize) || !(Math.abs(location.getZ()) <= borderSize);
     }
 
     public void generateBedrockWall(World world) {
