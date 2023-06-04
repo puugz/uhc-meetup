@@ -23,7 +23,12 @@ public class BorderHandler {
 
     @Getter
     @Setter
-    private int borderSize = 125;
+    private int borderSize;
+
+    public BorderHandler() {
+        this.borderSize = UHCMeetup.getInstance().getConfig()
+                .getInt("starting-border", 125);
+    }
 
     private static final int WALL_HEIGHT = 5;
     private static final List<Material> IGNORED_WALL_TYPES =
