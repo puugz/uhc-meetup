@@ -31,7 +31,7 @@ public class MessagesConfig {
     public final String playerQuit = ChatColor.BLUE + "{player} " + ChatColor.GRAY + "has left the game.";
 
     @Coloured
-    public final String playerDisqualified = ChatColor.BLUE + "{player} " + ChatColor.RED + "has left and been disqualified!";
+    public final String playerDisqualified = ChatColor.BLUE + "{player} " + ChatColor.GRAY + "left and has been disqualified!";
 
     @Coloured
     public final String startingCancelled = ChatColor.RED + "The game has been cancelled due to a player leaving.";
