@@ -4,6 +4,7 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.game.player.task.WinnerFireworkTask;
 import me.puugz.meetup.game.state.states.PlayingState;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -77,6 +78,10 @@ public class PlayerHandler {
             final GamePlayer winner = alive.get(0);
             winner.setGamesWon(winner.getGamesWon() + 1);
             this.winnerName = winner.getName();
+
+            final Player winnerPlayer = winner.asPlayer();
+            new WinnerFireworkTask(winnerPlayer)
+                    .runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
 
             UHCMeetup.getInstance().getStateHandler().next();
         }
