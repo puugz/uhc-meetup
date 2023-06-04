@@ -7,6 +7,10 @@ import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.util.LocationUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.Arrays;
 import java.util.List;
