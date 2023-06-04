@@ -32,7 +32,6 @@ public class EndingState extends PassiveState {
                 .replace("{winner}", UHCMeetup.getInstance().getPlayerHandler().getWinnerName()));
         Bukkit.broadcastMessage("");
 
-        // TODO: Save data to database
         this.countdown.start();
     }
 

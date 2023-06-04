@@ -57,7 +57,6 @@ public class PlayerUtil {
         return ((CraftPlayer) player).getHandle().ping;
     }
 
-    // TODO: Use reflection
     public void sit(Player player) {
         final CraftPlayer craftPlayer = (CraftPlayer) player;
         final Location location = player.getLocation();
