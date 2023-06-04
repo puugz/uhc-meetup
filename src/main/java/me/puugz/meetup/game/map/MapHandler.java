@@ -3,7 +3,7 @@ package me.puugz.meetup.game.map;
 import lombok.Getter;
 import lombok.Setter;
 import me.puugz.meetup.UHCMeetup;
-import me.puugz.meetup.game.map.thread.MapGenerator;
+import me.puugz.meetup.game.map.task.MapGeneratorTask;
 import me.puugz.meetup.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,7 +35,7 @@ public class MapHandler {
      */
     private void generateMap() {
         try {
-            new MapGenerator().runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
+            new MapGeneratorTask().runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

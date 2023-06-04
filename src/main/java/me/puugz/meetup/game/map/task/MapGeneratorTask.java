@@ -1,4 +1,4 @@
-package me.puugz.meetup.game.map.thread;
+package me.puugz.meetup.game.map.task;
 
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.game.border.BorderHandler;
@@ -17,12 +17,12 @@ import java.io.IOException;
  * @author puugz
  * @since May 20, 2023
  */
-public class MapGenerator extends BukkitRunnable {
+public class MapGeneratorTask extends BukkitRunnable {
 
     private boolean isGenerating;
     private final long startTime = System.currentTimeMillis();
 
-    public MapGenerator() throws IOException {
+    public MapGeneratorTask() throws IOException {
         FileUtils.deleteDirectory(new File("uhc_meetup"));
         this.swapBiomes();
     }
