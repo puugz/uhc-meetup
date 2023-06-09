@@ -21,8 +21,8 @@ public class WaitingState extends PassiveState {
     @EventHandler
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        final int numOfWaiting = UHCMeetup.getInstance()
-                .getPlayerHandler().alive().size();
+        final int numOfWaiting = (int) UHCMeetup.getInstance()
+                .getPlayerHandler().alive().count();
 
         player.teleport(UHCMeetup.getInstance()
                 .getMapHandler().getSpawnLocation());
@@ -31,7 +31,7 @@ public class WaitingState extends PassiveState {
         event.setJoinMessage(this.messages.playerJoined
                 .replace("{player}", player.getName()));
 
-        if (numOfWaiting >= 2) {
+        if (numOfWaiting >= 1/*2*/) {
             UHCMeetup.getInstance().getStateHandler().next();
         } else {
             player.sendMessage(this.messages.minimumRequiredPlayers

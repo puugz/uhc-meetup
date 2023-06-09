@@ -53,16 +53,19 @@ public class NavigationMenu extends Menu {
 
     @Override
     public void populateMenu() {
-        for (GamePlayer gamePlayer : UHCMeetup.getInstance().getPlayerHandler().alive()) {
-            final ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-            final SkullMeta meta = (SkullMeta) head.getItemMeta();
+        UHCMeetup.getInstance()
+                .getPlayerHandler()
+                .alive()
+                .forEach(player -> {
+                    final ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+                    final SkullMeta meta = (SkullMeta) head.getItemMeta();
 
-            meta.setOwner(gamePlayer.getName());
-            meta.setDisplayName(ChatColor.GOLD + gamePlayer.getName());
-            meta.setLore(Collections.singletonList(this.messages.clickToTeleport));
-            head.setItemMeta(meta);
+                    meta.setOwner(player.getName());
+                    meta.setDisplayName(ChatColor.GOLD + player.getName());
+                    meta.setLore(Collections.singletonList(this.messages.clickToTeleport));
+                    head.setItemMeta(meta);
 
-            this.inventory.addItem(head);
-        }
+                    this.inventory.addItem(head);
+                });
     }
 }

@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
         final UUID uuid = event.getUniqueId();
         final String name = event.getName();
 
-        final GamePlayer gamePlayer = plugin.getPlayerHandler().load(uuid, name);
+        final GamePlayer gamePlayer = plugin.getPlayerHandler().findOrCreate(uuid, name);
         gamePlayer.setState(GamePlayer.State.PLAYING);
 
         if (gamePlayer.getFirstJoin() == -1L)

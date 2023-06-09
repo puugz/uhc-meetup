@@ -35,24 +35,19 @@ public class StartingState extends PassiveState {
         });
         this.countdown.start();
 
-        for (Player player : UHCMeetup.getInstance()
+        UHCMeetup.getInstance()
                 .getPlayerHandler()
                 .aliveAsPlayers()
-        ) {
-            this.preparePlayer(player);
-        }
+                .forEach(this::preparePlayer);
     }
 
     @Override
     public void disable() {
         Countdown.cancelIfActive(this.countdown);
 
-        for (Player player : UHCMeetup.getInstance()
-                .getPlayerHandler()
+        UHCMeetup.getInstance().getPlayerHandler()
                 .aliveAsPlayers()
-        ) {
-            PlayerUtil.unsit(player);
-        }
+                .forEach(PlayerUtil::unsit);
     }
 
     @EventHandler
@@ -67,8 +62,8 @@ public class StartingState extends PassiveState {
     @EventHandler
     public void handleQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
-        final int numOfWaiting = UHCMeetup.getInstance()
-                .getPlayerHandler().alive().size();
+        final int numOfWaiting = (int) UHCMeetup.getInstance()
+                .getPlayerHandler().alive().count();
 
         event.setQuitMessage(this.messages.playerQuit
                 .replace("{player}", player.getName()));

@@ -49,9 +49,8 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
             final StartingState startingState = (StartingState) state;
             final int seconds = startingState.getCountdown().getSeconds() + 1;
 
-            for (String line : config.starting) {
+            for (String line : config.starting)
                 element.add(line.replace("{time}", TimeUtil.formatSeconds(seconds)));
-            }
         } else if (state instanceof PlayingState) {
             final PlayingState playingState = (PlayingState) state;
 
@@ -68,7 +67,7 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
                         line
                                 .replace("{border_size}", "" + borderHandler.getBorderSize())
                                 .replace("<border_format>", borderFormat)
-                                .replace("{players}", "" + playerHandler.alive().size())
+                                .replace("{players}", "" + playerHandler.alive().count())
                                 .replace("{ping}", "" + PlayerUtil.getPing(player))
                                 .replace("{kills}", "" + gamePlayer.getLocalKills());
 
@@ -80,11 +79,10 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
                 }
             }
         } else if (state instanceof EndingState) {
-            for (String line : config.ending) {
+            for (String line : config.ending)
                 element.add(line
                         .replace("{kills}", "" + gamePlayer.getLocalKills())
                         .replace("{winner}", playerHandler.getWinnerName()));
-            }
         }
 
         return element;

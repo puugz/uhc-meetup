@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author puugz
@@ -72,26 +72,26 @@ public class PlayerHandler {
      * Called only from {@link PlayingState}
      */
     public void handleWinnerCheck() {
-        final List<GamePlayer> alive = this.alive();
+        this.alive()
+                .findFirst()
+                .ifPresent(winner -> {
+                    winner.setGamesWon(winner.getGamesWon() + 1);
+                    this.winnerName = winner.getName();
 
-        if (alive.size() == 1) {
-            final GamePlayer winner = alive.get(0);
-            winner.setGamesWon(winner.getGamesWon() + 1);
-            this.winnerName = winner.getName();
+                    final Player winnerPlayer = winner.asPlayer();
+                    new WinnerFireworkTask(winnerPlayer)
+                            .runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
 
-            final Player winnerPlayer = winner.asPlayer();
-            new WinnerFireworkTask(winnerPlayer)
-                    .runTaskTimer(UHCMeetup.getInstance(), 0L, 20L);
-
-            UHCMeetup.getInstance().getStateHandler().next();
-        }
+                    UHCMeetup.getInstance().getStateHandler().next();
+                });
     }
 
-    public GamePlayer load(UUID uuid, String name) {
+    public GamePlayer findOrCreate(UUID uuid, String name) {
         if (this.players.containsKey(uuid))
             return this.players.get(uuid);
 
-        GamePlayer gamePlayer = UHCMeetup.getInstance().getMongoHandler()
+        GamePlayer gamePlayer = UHCMeetup.getInstance()
+                .getMongoHandler()
                 .getPlayerRepository()
                 .find(uuid);
 
@@ -120,7 +120,8 @@ public class PlayerHandler {
                 .findFirst()
                 .orElse(UHCMeetup.getInstance().getMongoHandler()
                         .getPlayerRepository()
-                        .find(Filters.regex("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE))))
+                        .find(Filters.regex("name", Pattern.compile(name, Pattern.CASE_INSENSITIVE)))
+                )
         );
     }
 
@@ -128,23 +129,13 @@ public class PlayerHandler {
         this.players.put(uuid, new GamePlayer(uuid, name));
     }
 
-    public List<GamePlayer> alive() {
+    public Stream<GamePlayer> alive() {
         return this.players.values().stream()
                 .filter(player -> player.getState() == GamePlayer.State.PLAYING)
-                .filter(player -> player.asPlayer() != null)
-                .collect(Collectors.toList());
+                .filter(player -> player.asPlayer() != null);
     }
 
-    public List<Player> aliveAsPlayers() {
-        return this.alive().stream()
-                .map(GamePlayer::asPlayer)
-                .collect(Collectors.toList());
-    }
-
-    public List<GamePlayer> spectators() {
-        return this.players.values().stream()
-                .filter(player -> player.getState() == GamePlayer.State.SPECTATING)
-                .filter(player -> player.asPlayer() != null)
-                .collect(Collectors.toList());
+    public Stream<Player> aliveAsPlayers() {
+        return this.alive().map(GamePlayer::asPlayer);
     }
 }
