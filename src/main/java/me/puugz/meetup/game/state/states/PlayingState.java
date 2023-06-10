@@ -3,6 +3,7 @@ package me.puugz.meetup.game.state.states;
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.event.CustomDeathEvent;
 import me.puugz.meetup.game.player.GamePlayer;
@@ -36,14 +37,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PlayingState implements GameState {
 
-    // TODO: Settings config
-    private static final int BORDER_SHRINK_TIME = 120;
+    private final MessagesConfig messages = UHCMeetup.getInstance().getMessagesConfig();
+    private final SettingsConfig settings = UHCMeetup.getInstance().getSettingsConfig();
 
     @Getter
-    private final Countdown borderCountdown = new Countdown(BORDER_SHRINK_TIME);
-
-    private final MessagesConfig messages = UHCMeetup.getInstance()
-            .getMessagesConfig();
+    private final Countdown borderCountdown = new Countdown(this.settings.borderShrinkTime);
 
     private final PlayerHandler playerHandler = UHCMeetup.getInstance().getPlayerHandler();
     private final BorderHandler borderHandler = UHCMeetup.getInstance().getBorderHandler();
@@ -54,7 +52,7 @@ public class PlayingState implements GameState {
     public void enable() {
         UHCMeetup.getInstance()
                 .getPlayerHandler()
-                .alive()
+                .players()
                 .forEach(it -> it.setGamesPlayed(it.getGamesPlayed() + 1));
 
         final AtomicInteger newBorderSize = new AtomicInteger(this.borderHandler.getBorderSize() > 25
@@ -75,7 +73,7 @@ public class PlayingState implements GameState {
                         ? this.borderHandler.getBorderSize() - 25
                         : this.borderHandler.getBorderSize() - 15);
                 this.borderCountdown.setMessage(this.messages.borderShrink.replace("{size}", newBorderSize.toString()));
-                this.borderCountdown.setSeconds(BORDER_SHRINK_TIME);
+                this.borderCountdown.setSeconds(this.settings.borderShrinkTime);
             } else {
                 this.borderCountdown.cancel();
             }
@@ -91,7 +89,7 @@ public class PlayingState implements GameState {
         Countdown.cancelIfActive(this.borderCountdown);
 
         UHCMeetup.getInstance().getScenarioHandler().disable();
-        UHCMeetup.getInstance().getPlayerHandler().alive()
+        UHCMeetup.getInstance().getPlayerHandler().players()
                 .forEach(GamePlayer::stopNoCleanTimer);
     }
 

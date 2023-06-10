@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
  */
 public class NoCleanTimer extends Countdown {
 
-    public NoCleanTimer(GamePlayer gamePlayer) {
-        super(15);
+    public NoCleanTimer(GamePlayer gamePlayer, int time) {
+        super(time);
 
         final Player player = gamePlayer.asPlayer();
         final MessagesConfig messages = UHCMeetup.getInstance()

@@ -1,11 +1,10 @@
 package me.puugz.meetup.game.player.listener;
 
 import me.puugz.meetup.UHCMeetup;
+import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.menu.Menu;
 import me.puugz.meetup.menu.menus.NavigationMenu;
-import me.puugz.meetup.util.Color;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,11 +25,12 @@ import java.util.UUID;
 public class PlayerListener implements Listener {
 
     private final UHCMeetup plugin = UHCMeetup.getInstance();
+    private final MessagesConfig messages = this.plugin.getMessagesConfig();
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void handlePreLogin(AsyncPlayerPreLoginEvent event) {
-        if (!plugin.isReady()) {
-            event.setKickMessage(Color.translate(plugin.getMessagesConfig().notReady));
+        if (!this.plugin.isReady()) {
+            event.setKickMessage(this.messages.notReady);
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
             return;
         }
@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
         final UUID uuid = event.getUniqueId();
         final String name = event.getName();
 
-        final GamePlayer gamePlayer = plugin.getPlayerHandler().findOrCreate(uuid, name);
+        final GamePlayer gamePlayer = this.plugin.getPlayerHandler().findOrCreate(uuid, name);
         gamePlayer.setState(GamePlayer.State.PLAYING);
 
         if (gamePlayer.getFirstJoin() == -1L)
@@ -48,16 +48,16 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void handleJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        final GamePlayer gamePlayer = plugin
+        final GamePlayer gamePlayer = this.plugin
                 .getPlayerHandler().find(player.getUniqueId());
 
         if (gamePlayer == null)
-            player.kickPlayer(ChatColor.RED + "There was an error loading your data...");
+            player.kickPlayer(this.messages.dataLoadingError);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void handleQuit(PlayerQuitEvent event) {
-        final GamePlayer gamePlayer = plugin
+        final GamePlayer gamePlayer = this.plugin
                 .getPlayerHandler().find(event.getPlayer().getUniqueId());
         if (gamePlayer != null)
             gamePlayer.saveAsync();
@@ -69,7 +69,7 @@ public class PlayerListener implements Listener {
             return;
 
         final Player player = event.getPlayer();
-        final GamePlayer gamePlayer = plugin
+        final GamePlayer gamePlayer = this.plugin
                 .getPlayerHandler().find(player.getUniqueId());
 
         if (event.getItem().getType() == Material.COMPASS &&
@@ -84,13 +84,13 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void handleChat(AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
-        final GamePlayer gamePlayer = plugin
+        final GamePlayer gamePlayer = this.plugin
                 .getPlayerHandler().find(player.getUniqueId());
 
         if (gamePlayer.getState() == GamePlayer.State.SPECTATING) {
-            event.setFormat(plugin.getMessagesConfig().spectatorPrefix
+            event.setFormat(this.messages.spectatorPrefix
                     .replace("{format}", event.getFormat()));
-            event.getRecipients().removeIf(recipient -> plugin.getPlayerHandler()
+            event.getRecipients().removeIf(recipient -> this.plugin.getPlayerHandler()
                     .find(recipient.getUniqueId())
                     .getState() == GamePlayer.State.PLAYING);
         }
@@ -98,7 +98,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void handleDrag(InventoryDragEvent event) {
-        final GamePlayer gamePlayer = plugin
+        final GamePlayer gamePlayer = this.plugin
                 .getPlayerHandler()
                 .find(event.getWhoClicked().getUniqueId());
 
@@ -111,7 +111,7 @@ public class PlayerListener implements Listener {
                 || event.getCurrentItem().getType() == Material.AIR)
             return;
 
-        final GamePlayer gamePlayer = plugin
+        final GamePlayer gamePlayer = this.plugin
                 .getPlayerHandler()
                 .find(event.getWhoClicked().getUniqueId());
         event.setCancelled(gamePlayer.getState() == GamePlayer.State.SPECTATING);
@@ -124,9 +124,6 @@ public class PlayerListener implements Listener {
         }
     }
 
-    /**
-     * Not player related but idc
-     */
     @EventHandler
     public void handleCreatureSpawn(CreatureSpawnEvent event) {
         event.setCancelled(true);

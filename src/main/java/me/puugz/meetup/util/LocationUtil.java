@@ -18,6 +18,11 @@ public class LocationUtil {
 
     private static final Random RANDOM = new Random(System.currentTimeMillis());
 
+    /**
+     * Finds an appropriate location to scatter the player at
+     * @param borderSize The size of the current border
+     * @return The scatter location
+     */
     public Location getScatterLocation(int borderSize) {
         final World world = UHCMeetup.getInstance()
                 .getMapHandler().getMapWorld();
@@ -27,7 +32,6 @@ public class LocationUtil {
         int z;
 
         // Prevents the player from spawning in a cave or above water/lava
-        // TODO: Make it so you don't spawn too close to other players
         do {
             x = RANDOM.nextInt(borderSize * 2) - borderSize;
             z = RANDOM.nextInt(borderSize * 2) - borderSize;
@@ -37,6 +41,11 @@ public class LocationUtil {
         return new Location(world, x + 0.5, y, z + 0.5);
     }
 
+    /**
+     * Serializes a location to a string
+     * @param location The location
+     * @return The serialized location
+     */
     public String locationToString(Location location) {
         return location.getWorld().getName() +
                 ", " + location.getX() +
@@ -46,6 +55,11 @@ public class LocationUtil {
                 ", " + location.getPitch();
     }
 
+    /**
+     * Deserializes a string to a location
+     * @param locationString The location in a string form
+     * @return The location
+     */
     public Location stringToLocation(String locationString) {
         final String[] parts = locationString.split(", ");
 

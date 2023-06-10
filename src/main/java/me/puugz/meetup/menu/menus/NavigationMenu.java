@@ -2,7 +2,6 @@ package me.puugz.meetup.menu.menus;
 
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
-import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.menu.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,7 +54,7 @@ public class NavigationMenu extends Menu {
     public void populateMenu() {
         UHCMeetup.getInstance()
                 .getPlayerHandler()
-                .alive()
+                .players()
                 .forEach(player -> {
                     final ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                     final SkullMeta meta = (SkullMeta) head.getItemMeta();

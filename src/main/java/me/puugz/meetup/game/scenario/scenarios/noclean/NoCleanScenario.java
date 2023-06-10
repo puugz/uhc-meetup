@@ -2,6 +2,7 @@ package me.puugz.meetup.game.scenario.scenarios.noclean;
 
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.game.event.CustomDeathEvent;
 import me.puugz.meetup.game.player.GamePlayer;
 import me.puugz.meetup.game.scenario.Scenario;
@@ -31,8 +32,10 @@ public class NoCleanScenario extends Scenario {
         if (killer != null && !killer.getUniqueId().equals(victim.getUniqueId())) {
             final GamePlayer killerData = UHCMeetup.getInstance()
                     .getPlayerHandler().find(killer.getUniqueId());
+            final SettingsConfig settings = UHCMeetup.getInstance()
+                    .getSettingsConfig();
 
-            killerData.setNoCleanTimer(new NoCleanTimer(killerData));
+            killerData.setNoCleanTimer(new NoCleanTimer(killerData, settings.noCleanTime));
         }
     }
 

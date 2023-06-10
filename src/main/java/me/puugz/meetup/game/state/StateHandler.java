@@ -30,6 +30,9 @@ public class StateHandler {
         this.currentState.enable();
     }
 
+    /**
+     * Transitions to the next state
+     */
     public void next() {
         this.setState(this.currentState.next());
     }

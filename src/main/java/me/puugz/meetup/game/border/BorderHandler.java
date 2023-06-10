@@ -4,8 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.util.LocationUtil;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,16 +25,12 @@ import java.util.List;
  */
 public class BorderHandler implements Listener {
 
+    private final SettingsConfig settings = UHCMeetup.getInstance().getSettingsConfig();
+
     @Getter
     @Setter
-    private int borderSize;
+    private int borderSize = this.settings.initialBorderSize;
 
-    public BorderHandler() {
-        this.borderSize = UHCMeetup.getInstance().getConfig()
-                .getInt("starting-border", 125);
-    }
-
-    private static final int WALL_HEIGHT = 5;
     private static final List<Material> IGNORED_WALL_TYPES =
             Arrays.asList(
                     Material.WATER, Material.STATIONARY_WATER, Material.LAVA,
@@ -40,6 +40,10 @@ public class BorderHandler implements Listener {
                     Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.HUGE_MUSHROOM_1,
                     Material.HUGE_MUSHROOM_2
             );
+
+    public BorderHandler() {
+        UHCMeetup.getInstance().getLogger().info("border size: " + this.borderSize);
+    }
 
     @EventHandler
     public void handleMove(PlayerMoveEvent event) {
@@ -51,7 +55,7 @@ public class BorderHandler implements Listener {
             final Player player = event.getPlayer();
 
             player.setVelocity(event.getFrom().toVector().subtract(event.getTo().toVector()).normalize());
-            player.sendMessage(ChatColor.RED + "You have reached the border!");
+            player.sendMessage(UHCMeetup.getInstance().getMessagesConfig().reachedBorder);
         }
     }
 
@@ -100,9 +104,9 @@ public class BorderHandler implements Listener {
     private void generateWallAt(World world, int x, int z) {
         final int y = world.getHighestBlockYAt(x, z);
 
-        for (int i = y + WALL_HEIGHT; i > 50; i--) {
+        for (int i = y + this.settings.borderWallHeight - 1; i > 50; i--) {
             final Block block = world.getBlockAt(x, i, z);
-            if (IGNORED_WALL_TYPES.contains(block.getType()) || block.isEmpty())
+            if (block.isEmpty() || IGNORED_WALL_TYPES.contains(block.getType()))
                 block.setType(Material.BEDROCK);
         }
     }

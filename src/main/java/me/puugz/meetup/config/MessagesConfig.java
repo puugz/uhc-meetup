@@ -22,9 +22,6 @@ public class MessagesConfig {
     public final String nowSpectating = ChatColor.GRAY + "You are now a spectator of this game.";
 
     @Coloured
-    public final String teleportInsideBorder = ChatColor.RED + "You have been teleported inside the border.";
-
-    @Coloured
     public final String playerJoined = ChatColor.BLUE + "{player} " + ChatColor.GRAY + "has joined the game.";
 
     @Coloured
@@ -37,7 +34,13 @@ public class MessagesConfig {
     public final String startingCancelled = ChatColor.RED + "The game has been cancelled due to a player leaving.";
 
     @Coloured
-    public final String minimumRequiredPlayers = ChatColor.GRAY + "Minimum of {min} players is required for the game to start.";
+    public final String minimumRequiredPlayers = ChatColor.GRAY + "Minimum of " + ChatColor.BLUE + "{min} players " + ChatColor.GRAY + "is required for the game to start.";
+
+    @Coloured
+    public final String teleportInsideBorder = ChatColor.RED + "You have been teleported inside the border.";
+
+    @Coloured
+    public final String reachedBorder = ChatColor.RED + "You have reached the border!";
 
     @Coloured
     public final String borderShrink = ChatColor.GRAY + "The border will shrink to " + ChatColor.BLUE + "{size} " + ChatColor.GRAY + "in " + ChatColor.BLUE + "{time}" + ChatColor.GRAY + ".";
@@ -63,9 +66,12 @@ public class MessagesConfig {
     @Coloured
     public final String serverRestart = ChatColor.RED + "Server restarting...";
 
-    // TODO: Make the whole win message configurable
     @Coloured
-    public final String win = ChatColor.BLUE + "{winner} " + ChatColor.GREEN + "wins!";
+    public final List<String> win = Arrays.asList(
+            "",
+            ChatColor.BLUE + "{player} " + ChatColor.GREEN + "wins!",
+            ""
+    );
 
     @Coloured
     public final String spectatorPrefix = ChatColor.GRAY + "[Spectator] " + ChatColor.RESET + "{format}";
@@ -120,6 +126,9 @@ public class MessagesConfig {
 
     @Coloured
     public final String noCleanExpired = ChatColor.RED + "Your no clean timer has expired!";
+
+    @Coloured
+    public final String dataLoadingError = ChatColor.RED + "There was an error loading your data...";
 
     @Coloured
     public final String fetchingDataError = ChatColor.RED + "Couldn't fetch data for {player}: {reason}";

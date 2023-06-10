@@ -42,11 +42,14 @@ public class PlayerUtil {
         player.getActivePotionEffects()
                 .forEach(effect -> player.removePotionEffect(effect.getType()));
 
-        if (updateInventory) {
+        if (updateInventory)
             player.updateInventory();
-        }
     }
 
+    /**
+     * Sends a message to everyone with a note sticks sound
+     * @param message The message to send
+     */
     public void broadcast(String message) {
         Bukkit.broadcastMessage(message);
         Bukkit.getOnlinePlayers()
@@ -57,7 +60,7 @@ public class PlayerUtil {
         return ((CraftPlayer) player).getHandle().ping;
     }
 
-    public void sit(Player player) {
+    public void seat(Player player) {
         final CraftPlayer craftPlayer = (CraftPlayer) player;
         final Location location = player.getLocation();
         final EntityBat bat = new EntityBat(((CraftWorld) location.getWorld()).getHandle());
@@ -75,7 +78,7 @@ public class PlayerUtil {
         craftPlayer.getHandle().playerConnection.sendPacket(sitPacket);
     }
 
-    public void unsit(Player player) {
+    public void unseat(Player player) {
         if (player.hasMetadata("sitting")) {
             final CraftPlayer craftPlayer = (CraftPlayer) player;
             final PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(player.getMetadata("sitting").get(0).asInt());

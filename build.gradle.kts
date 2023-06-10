@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "me.puugz"
-version = "1.0"
+version = "1.0.0"
 
 repositories {
     mavenLocal()

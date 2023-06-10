@@ -67,7 +67,7 @@ public class ScoreboardProvider implements ScoreboardElementHandler {
                         line
                                 .replace("{border_size}", "" + borderHandler.getBorderSize())
                                 .replace("<border_format>", borderFormat)
-                                .replace("{players}", "" + playerHandler.alive().count())
+                                .replace("{players}", "" + playerHandler.players().count())
                                 .replace("{ping}", "" + PlayerUtil.getPing(player))
                                 .replace("{kills}", "" + gamePlayer.getLocalKills());
 

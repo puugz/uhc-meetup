@@ -5,13 +5,17 @@ import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.game.player.task.WinnerFireworkTask;
+import me.puugz.meetup.game.state.states.EndingState;
 import me.puugz.meetup.game.state.states.PlayingState;
-import org.bukkit.*;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -69,10 +73,12 @@ public class PlayerHandler {
     }
 
     /**
+     * Used to check for a winner and transition to the {@link EndingState}
+     * <p>
      * Called only from {@link PlayingState}
      */
     public void handleWinnerCheck() {
-        this.alive()
+        this.players()
                 .findFirst()
                 .ifPresent(winner -> {
                     winner.setGamesWon(winner.getGamesWon() + 1);
@@ -86,6 +92,12 @@ public class PlayerHandler {
                 });
     }
 
+    /**
+     * Finds or creates a new {@link GamePlayer}
+     * @param uuid The {@link Player}'s id
+     * @param name The {@link Player}'s name
+     * @return The {@link GamePlayer} object
+     */
     public GamePlayer findOrCreate(UUID uuid, String name) {
         if (this.players.containsKey(uuid))
             return this.players.get(uuid);
@@ -125,17 +137,19 @@ public class PlayerHandler {
         );
     }
 
-    public void add(UUID uuid, String name) {
-        this.players.put(uuid, new GamePlayer(uuid, name));
-    }
-
-    public Stream<GamePlayer> alive() {
+    /**
+     * @return A stream of {@link GamePlayer}s that are playing in the game
+     */
+    public Stream<GamePlayer> players() {
         return this.players.values().stream()
                 .filter(player -> player.getState() == GamePlayer.State.PLAYING)
                 .filter(player -> player.asPlayer() != null);
     }
 
-    public Stream<Player> aliveAsPlayers() {
-        return this.alive().map(GamePlayer::asPlayer);
+    /**
+     * @return A stream of {@link Player}s that are playing in the game
+     */
+    public Stream<Player> bukkitPlayers() {
+        return this.players().map(GamePlayer::asPlayer);
     }
 }

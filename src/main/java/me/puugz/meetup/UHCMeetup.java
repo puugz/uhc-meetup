@@ -10,6 +10,7 @@ import me.puugz.meetup.command.SetSpawnCommand;
 import me.puugz.meetup.command.StatsCommand;
 import me.puugz.meetup.config.MessagesConfig;
 import me.puugz.meetup.config.ScoreboardsConfig;
+import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.game.border.BorderHandler;
 import me.puugz.meetup.game.kit.KitHandler;
 import me.puugz.meetup.game.map.MapHandler;
@@ -45,6 +46,7 @@ public class UHCMeetup extends JavaPlugin {
     private ConfigFactory configFactory;
     private MessagesConfig messagesConfig;
     private ScoreboardsConfig scoreboardsConfig;
+    private SettingsConfig settingsConfig;
 
     private MongoHandler mongoHandler;
     private PlayerHandler playerHandler;
@@ -64,6 +66,7 @@ public class UHCMeetup extends JavaPlugin {
         this.configFactory = ConfigFactory.newFactory(this);
         this.messagesConfig = this.configFactory.fromFile("messages", MessagesConfig.class);
         this.scoreboardsConfig = this.configFactory.fromFile("scoreboards", ScoreboardsConfig.class);
+        this.settingsConfig = this.configFactory.fromFile("settings", SettingsConfig.class);
 
         this.mongoHandler = new MongoHandler();
         this.playerHandler = new PlayerHandler();

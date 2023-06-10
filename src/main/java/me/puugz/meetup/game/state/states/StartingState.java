@@ -3,6 +3,7 @@ package me.puugz.meetup.game.state.states;
 import lombok.Getter;
 import me.puugz.meetup.UHCMeetup;
 import me.puugz.meetup.config.MessagesConfig;
+import me.puugz.meetup.config.SettingsConfig;
 import me.puugz.meetup.game.state.GameState;
 import me.puugz.meetup.game.state.PassiveState;
 import me.puugz.meetup.game.state.countdown.Countdown;
@@ -20,8 +21,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class StartingState extends PassiveState {
 
-    private final MessagesConfig messages = UHCMeetup.getInstance()
-            .getMessagesConfig();
+    private final MessagesConfig messages = UHCMeetup.getInstance().getMessagesConfig();
+    private final SettingsConfig settings = UHCMeetup.getInstance().getSettingsConfig();
 
     @Getter
     private Countdown countdown;
@@ -29,7 +30,7 @@ public class StartingState extends PassiveState {
     @Override
     public void enable() {
         this.countdown = new Countdown(
-                60, this.messages.gameStarting, () -> {
+                this.settings.startingTime, this.messages.gameStarting, () -> {
             PlayerUtil.broadcast(this.messages.gameStarted);
             UHCMeetup.getInstance().getStateHandler().next();
         });
@@ -37,7 +38,7 @@ public class StartingState extends PassiveState {
 
         UHCMeetup.getInstance()
                 .getPlayerHandler()
-                .aliveAsPlayers()
+                .bukkitPlayers()
                 .forEach(this::preparePlayer);
     }
 
@@ -46,8 +47,8 @@ public class StartingState extends PassiveState {
         Countdown.cancelIfActive(this.countdown);
 
         UHCMeetup.getInstance().getPlayerHandler()
-                .aliveAsPlayers()
-                .forEach(PlayerUtil::unsit);
+                .bukkitPlayers()
+                .forEach(PlayerUtil::unseat);
     }
 
     @EventHandler
@@ -63,12 +64,12 @@ public class StartingState extends PassiveState {
     public void handleQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         final int numOfWaiting = (int) UHCMeetup.getInstance()
-                .getPlayerHandler().alive().count();
+                .getPlayerHandler().players().count();
 
         event.setQuitMessage(this.messages.playerQuit
                 .replace("{player}", player.getName()));
 
-        if (numOfWaiting < 2 && Countdown.isActive(this.countdown)) {
+        if (numOfWaiting < this.settings.minRequiredPlayers && Countdown.isActive(this.countdown)) {
             Bukkit.broadcastMessage(this.messages.startingCancelled);
             UHCMeetup.getInstance().getStateHandler().setState(GameState.WAITING);
         }
@@ -79,7 +80,7 @@ public class StartingState extends PassiveState {
         player.teleport(LocationUtil.getScatterLocation(
                 UHCMeetup.getInstance().getBorderHandler().getBorderSize()
         ));
-        PlayerUtil.sit(player);
+        PlayerUtil.seat(player);
         UHCMeetup.getInstance().getKitHandler().handleKit(player);
     }
 

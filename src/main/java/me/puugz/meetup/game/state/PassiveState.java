@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 /**
  * @author puugz
@@ -54,6 +55,11 @@ public abstract class PassiveState implements GameState {
 
     @EventHandler
     public void handle(PlayerItemConsumeEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void handle(VehicleEnterEvent event) {
         event.setCancelled(true);
     }
 }
